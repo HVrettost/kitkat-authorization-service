@@ -1,0 +1,13 @@
+plugins {
+    id "org.flywaydb.flyway" version "7.0.2"
+}
+
+group 'kitkat.auth'
+version '1.0'
+
+
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/POSTGRESQL'
+    user = 'postgres'
+}

@@ -1,0 +1,5 @@
+rootProject.name = 'kitkat-authorization-service'
+
+include 'authorization-application'
+include 'authorization-database'
+

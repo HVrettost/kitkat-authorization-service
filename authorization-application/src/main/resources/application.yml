@@ -1,0 +1,15 @@
+server:
+  port: 8900
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://http://127.0.0.1:5432/POSTGRESQL
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    initialize: true
