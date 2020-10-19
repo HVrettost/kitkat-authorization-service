@@ -17,3 +17,11 @@ What you will need before starting the service:
 In order to run the service:
 1) Run docker-compose up --build
 2) Subsequent runs do not have to contain the --build flag
+
+In order to get the JWT token:
+just make a POST call in http://localhost:8900/api/auth/token with body 
+
+{
+    "username": "username",
+    "password": "password"
+}

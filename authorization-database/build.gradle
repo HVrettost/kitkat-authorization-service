@@ -8,6 +8,6 @@ version '1.0'
 
 
 flyway {
-    url = 'jdbc:postgresql://localhost:5432/POSTGRESQL'
+    url = 'jdbc:postgresql://localhost:5432/authorizationdb'
     user = 'postgres'
 }
