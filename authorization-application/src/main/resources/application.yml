@@ -2,14 +2,11 @@ server:
   port: 8900
 spring:
   jpa:
-    database: POSTGRESQL
-    show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    platform: postgres
-    url: jdbc:postgresql://http://127.0.0.1:5432/POSTGRESQL
+    url: jdbc:postgresql://kitkat-authorization-database:5432/authorizationdb
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
-    initialize: true

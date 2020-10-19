@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //make implementation to call the user-service microservice
-        return new User("username", new BCryptPasswordEncoder().encode("password"), getGrantedAuthorities("ROLE_USER, ROLE_ADMIN"));
+        return new User("username", new BCryptPasswordEncoder().encode("password"), getGrantedAuthorities(""));
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(String userRoles) {

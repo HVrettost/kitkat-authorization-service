@@ -1,21 +1,19 @@
 version: '3.8'
 services:
   kitkat-autorization-service:
-    build: ./
+    build: .
     ports:
-      - "8900:8900"
+      - 8900:8900
     depends_on:
-      - kitkat-authorization-database
-    links:
       - kitkat-authorization-database
     container_name: kitkat-authorization-service
 
   kitkat-authorization-database:
-    image: postgres
+    image: postgres:13
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=POSTGRESQL
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: authorizationdb
     ports:
       - 5432:5432
     restart: always
