@@ -1,7 +1,10 @@
 package kitkat.auth.repository.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
@@ -12,7 +15,9 @@ import java.util.UUID;
 public class AuthToken {
 
     @Id
-    @Column(name = "client_id")
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "client_id", unique = true, nullable = false)
     private UUID clientId;
 
     @Column(name = "access_token")
@@ -21,8 +26,12 @@ public class AuthToken {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "expiration_time")
-    private Instant expirationTime;
+    @Column(name = "access_token_expiration_time")
+    private Instant accessTokenExpirationTime;
+
+    @Column(name = "refresh_token_expiration_time")
+    private Instant refreshTokenExpirationTime;
+
 
     public UUID getClientId() {
         return clientId;
@@ -48,11 +57,19 @@ public class AuthToken {
         this.refreshToken = refreshToken;
     }
 
-    public Instant getExpirationTime() {
-        return expirationTime;
+    public Instant getAccessTokenExpirationTime() {
+        return accessTokenExpirationTime;
     }
 
-    public void setExpirationTime(Instant expirationTime) {
-        this.expirationTime = expirationTime;
+    public void setAccessTokenExpirationTime(Instant accessTokenExpirationTime) {
+        this.accessTokenExpirationTime = accessTokenExpirationTime;
+    }
+
+    public Instant getRefreshTokenExpirationTime() {
+        return refreshTokenExpirationTime;
+    }
+
+    public void setRefreshTokenExpirationTime(Instant refreshTokenExpirationTime) {
+        this.refreshTokenExpirationTime = refreshTokenExpirationTime;
     }
 }

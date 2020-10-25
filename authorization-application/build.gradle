@@ -13,3 +13,7 @@ dependencies {
 
 mainClassName = 'kitkat.auth.app.AuthorizationApplication'
 
+bootRun {
+    dependsOn ':authorization-infrastructure:migrationStart', ':authorization-infrastructure:wiremockStart'
+    finalizedBy ':authorization-infrastructure:wiremockStop', ':authorization-infrastructure:postgresStop'
+}

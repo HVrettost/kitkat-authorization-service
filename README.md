@@ -14,9 +14,9 @@ What you will need before starting the service:
 1) Install JAVA 14 using sdk man from sdkman.io
 2) Install Docker 
 
-In order to run the service:
-1) Run docker-compose up --build
-2) Subsequent runs do not have to contain the --build flag
+In order to run the service: ./gradlew bR
+- This command will first start the postgres container, then apply the migration scripts and also start wiremock container
+- Wiremock container starts at port :8905
 
 In order to get the JWT token:
 just make a POST call in http://localhost:8900/api/auth/token with body 
@@ -25,3 +25,7 @@ just make a POST call in http://localhost:8900/api/auth/token with body
     "username": "username",
     "password": "password"
 }
+
+*Docker Notes:
+- In order to remove postgres and migration container and associated volumes type the command ./gradlew postgresStop
+- In order to remove wiremock container and associated volumes type the command ./gradlew wiremockStop
