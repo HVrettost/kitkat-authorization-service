@@ -1,0 +1,40 @@
+group 'kitkat.auth'
+version '1.0'
+
+
+task postgresStart(type: Exec) {
+    commandLine 'docker-compose', 'up', '-d', 'kitkat-authorization-database'
+}
+
+task postgresStop() {
+    doLast {
+        exec {
+            commandLine 'docker-compose', 'kill', 'kitkat-authorization-database'
+        }
+        exec {
+            commandLine 'docker-compose', 'rm', '-v', '-f', 'kitkat-authorization-database'
+        }
+        exec {
+            commandLine 'docker-compose', 'rm', '-v', '-f', 'kitkat-authorization-migration'
+        }
+    }
+}
+
+task migrationStart(type: Exec, dependsOn: postgresStart) {
+    commandLine 'docker-compose', 'up', 'kitkat-authorization-migration'
+}
+
+task wiremockStart(type: Exec) {
+    commandLine 'docker-compose', 'up', '-d', '--build', 'kitkat-authorization-mocks'
+}
+
+task wiremockStop() {
+    doLast {
+        exec {
+            commandLine 'docker-compose', 'kill', 'kitkat-authorization-mocks'
+        }
+        exec {
+            commandLine 'docker-compose', 'rm', '-v', '-f', 'kitkat-authorization-mocks'
+        }
+    }
+}
