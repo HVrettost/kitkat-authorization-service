@@ -1,0 +1,21 @@
+{
+  "priority": "2",
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/user",
+    "headers": {
+      "Accept": {
+        "contains": "json"
+      }
+    },
+    "queryParameters": {
+      "username": {
+        "equalTo": "username"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "user-service/user-by-username-response.json"
+  }
+}
