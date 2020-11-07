@@ -21,13 +21,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final AuthTokenService authTokenService;
+    private final AuthRoleService authRoleService;
 
     public AuthenticationServiceImpl(AuthenticationManager authenticationManager,
                                      JwtUtils jwtUtils,
-                                     AuthTokenService authTokenService) {
+                                     AuthTokenService authTokenService,
+                                     AuthRoleService authRoleService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.authTokenService = authTokenService;
+        this.authRoleService = authRoleService;
     }
 
     @Override
@@ -47,11 +50,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private AuthTokenDto createAuthTokenDto(AuthenticationRequestDto authenticationRequest) {
         AuthTokenDto authTokenDto = new AuthTokenDto();
+        String permissions = getUserPermissions(authenticationRequest.getUsername());
         authTokenDto.setTokenType(TokenType.BEARER.getValue());
         authTokenDto.setUsername(authenticationRequest.getUsername());
-        authTokenDto.setAccessToken(jwtUtils.generateAccessToken(authenticationRequest.getUsername()));
-        authTokenDto.setRefreshToken(jwtUtils.generateRefreshToken(authenticationRequest.getUsername()));
+        authTokenDto.setAccessToken(jwtUtils.generateAccessToken(authenticationRequest.getUsername(), permissions));
+        authTokenDto.setRefreshToken(jwtUtils.generateRefreshToken(authenticationRequest.getUsername(), permissions));
+        authTokenDto.setScope(permissions);
 
         return authTokenDto;
+    }
+
+    private String getUserPermissions(String username) {
+        String authRole = authRoleService.getAuthRoleByUsername(username).getRole();
+        return authRoleService.getPermissionsByAuthRole(authRole).getPermissions();
     }
 }

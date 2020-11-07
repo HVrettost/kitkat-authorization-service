@@ -1,30 +1,21 @@
 package kitkat.auth.model.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
-
-import java.util.UUID;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(schema = "AUTH", name = "AUTH_TOKEN")
 public class AuthToken {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "AUTH_TOKEN_ID")
-    private UUID authTokenId;
+    @Column(name = "USERNAME")
+    private String username;
 
     @Column(name = "TOKEN_TYPE")
     private String tokenType;
 
-    @Column(name = "USERNAME")
-    private String username;
 
     @Column(name = "ACCESS_TOKEN")
     private String accessToken;
@@ -32,13 +23,8 @@ public class AuthToken {
     @Column(name = "REFRESH_TOKEN")
     private String refreshToken;
 
-    public UUID getAuthTokenId() {
-        return authTokenId;
-    }
-
-    public void setAuthTokenId(UUID authTokenId) {
-        this.authTokenId = authTokenId;
-    }
+    @Column(name = "SCOPE")
+    private String scope;
 
     public String getTokenType() {
         return tokenType;
@@ -70,5 +56,13 @@ public class AuthToken {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }

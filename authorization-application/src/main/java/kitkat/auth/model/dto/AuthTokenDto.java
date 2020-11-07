@@ -1,22 +1,12 @@
 package kitkat.auth.model.dto;
 
-import java.util.UUID;
-
 public class AuthTokenDto {
 
-    private UUID authTokenId;
     private String tokenType;
     private String username;
     private String accessToken;
     private String refreshToken;
-
-    public UUID getAuthTokenId() {
-        return authTokenId;
-    }
-
-    public void setAuthTokenId(UUID authTokenId) {
-        this.authTokenId = authTokenId;
-    }
+    private String scope;
 
     public String getTokenType() {
         return tokenType;
@@ -48,5 +38,13 @@ public class AuthTokenDto {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }

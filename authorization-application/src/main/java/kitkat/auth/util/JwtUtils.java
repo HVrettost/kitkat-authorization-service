@@ -20,21 +20,23 @@ public class JwtUtils {
         this.dateUtils = dateUtils;
     }
 
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(String username, String permissions) {
         return JWT.create()
                 .withIssuer(jwtConfigProperties.getIssuer())
                 .withIssuedAt(dateUtils.getCurrentUTCDate())
                 .withExpiresAt(dateUtils.getCurrentUTCDateWithOffset(jwtConfigProperties.getAccessTokenExpirationIntervalInMillis()))
                 .withSubject(username)
+                .withClaim("perms", permissions)
                 .sign(Algorithm.HMAC256(jwtConfigProperties.getSecret()));
     }
 
-    public String generateRefreshToken(String username) {
+    public String generateRefreshToken(String username, String permissions) {
         return JWT.create()
                 .withIssuer(jwtConfigProperties.getIssuer())
                 .withIssuedAt(dateUtils.getCurrentUTCDate())
                 .withExpiresAt(dateUtils.getCurrentUTCDateWithOffset(jwtConfigProperties.getRefreshTokenExpirationIntervalInMillis()))
                 .withSubject(username)
+                .withClaim("perms", permissions)
                 .sign(Algorithm.HMAC256(jwtConfigProperties.getSecret()));
     }
 

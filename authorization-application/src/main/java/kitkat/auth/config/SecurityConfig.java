@@ -2,6 +2,7 @@ package kitkat.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,8 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/api/auth/token").permitAll()
-                .antMatchers("/api/auth/token/refresh").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/auth/token").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/token").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/api/auth/token").permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/auth/token/refresh").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
