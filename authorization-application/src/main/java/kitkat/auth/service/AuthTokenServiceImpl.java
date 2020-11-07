@@ -21,8 +21,9 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
     @Override
     @Transactional
-    public void invalidateToken(String username) {
-        authTokenDao.invalidateToken(username);
+    public void invalidateToken(AuthTokenDto authTokenDto) {
+        jwtUtils.validateAccessToken(authTokenDto);
+        authTokenDao.invalidateToken(authTokenDto.getUsername());
     }
 
     public AuthTokenDto invalidateTokenIfExistsAndSaveNewToken(AuthTokenDto authTokenDto) {
@@ -33,6 +34,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     @Transactional
     public AuthTokenDto updateAccessToken(AuthTokenDto authTokenDto) {
+        jwtUtils.validateRefreshToken(authTokenDto);
         String accessToken = jwtUtils.generateAccessToken(authTokenDto.getUsername());
         authTokenDto.setAccessToken(accessToken);
         authTokenDao.updateAccessTokenByUsername(authTokenDto);
@@ -42,6 +44,10 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
     @Override
     public AuthTokenDto getTokenByUsername(String username) {
-        return authTokenDao.getTokenByUsername(username);
+        AuthTokenDto authTokenDto = authTokenDao.getTokenByUsername(username);
+        jwtUtils.validateAccessToken(authTokenDto);
+        jwtUtils.validateRefreshToken(authTokenDto);
+
+        return authTokenDto;
     }
 }

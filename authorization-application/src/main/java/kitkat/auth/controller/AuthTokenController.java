@@ -26,7 +26,7 @@ public class AuthTokenController implements AuthTokenApi {
 
     @Override
     public void invalidateToken(AuthTokenDto authTokenDto) {
-        authTokenService.invalidateToken(authTokenDto.getUsername());
+        authTokenService.invalidateToken(authTokenDto);
     }
 
     @Override

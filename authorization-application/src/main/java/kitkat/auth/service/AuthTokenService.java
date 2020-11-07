@@ -4,7 +4,7 @@ import kitkat.auth.model.dto.AuthTokenDto;
 
 public interface AuthTokenService {
 
-    void invalidateToken(String username);
+    void invalidateToken(AuthTokenDto authTokenDto);
 
     AuthTokenDto invalidateTokenIfExistsAndSaveNewToken(AuthTokenDto authTokenDto);
 

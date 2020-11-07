@@ -13,6 +13,7 @@ public class JWTConfigProperties {
     private String secret;
     private long accessTokenExpirationIntervalInMillis;
     private long refreshTokenExpirationIntervalInMillis;
+    private long leeway;
 
     public String getIssuer() {
         return issuer;
@@ -44,5 +45,13 @@ public class JWTConfigProperties {
 
     public void setRefreshTokenExpirationIntervalInMillis(long refreshTokenExpirationIntervalInMillis) {
         this.refreshTokenExpirationIntervalInMillis = refreshTokenExpirationIntervalInMillis;
+    }
+
+    public long getLeeway() {
+        return leeway;
+    }
+
+    public void setLeeway(long leeway) {
+        this.leeway = leeway;
     }
 }
