@@ -1,9 +1,9 @@
 package kitkat.auth.service;
 
-import kitkat.auth.model.AuthenticationRequestDto;
-import kitkat.auth.model.AuthenticationResponseDto;
+import kitkat.auth.model.dto.AuthTokenDto;
+import kitkat.auth.model.dto.AuthenticationRequestDto;
 
 public interface AuthenticationService {
 
-    AuthenticationResponseDto authenticate(AuthenticationRequestDto authenticationRequest);
+    AuthTokenDto authenticate(AuthenticationRequestDto authenticationRequest);
 }

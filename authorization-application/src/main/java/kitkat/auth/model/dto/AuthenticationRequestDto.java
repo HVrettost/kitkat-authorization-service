@@ -1,4 +1,4 @@
-package kitkat.auth.model;
+package kitkat.auth.model.dto;
 
 public class AuthenticationRequestDto {
 

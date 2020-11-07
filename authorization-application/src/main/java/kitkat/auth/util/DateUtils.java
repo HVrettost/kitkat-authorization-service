@@ -8,22 +8,11 @@ import java.util.Date;
 @Component
 public class DateUtils {
 
-    private final Clock clock;
-
-    public DateUtils(Clock clock) {
-        this.clock = clock;
+    public Date getCurrentUTCDate() {
+        return new Date(Clock.systemUTC().millis());
     }
 
-    public Date getCurrentDate() {
-        return new Date(clock.instant().getEpochSecond());
+    public Date getCurrentUTCDateWithOffset(long offset) {
+        return new Date(Clock.systemUTC().millis() + offset);
     }
-
-    public Date getCurrentDateWithOffset(long offset) {
-        return new Date(clock.instant().getEpochSecond() + offset);
-    }
-
-    public long getCurrentDateInMillis() {
-        return clock.instant().toEpochMilli();
-    }
-
 }

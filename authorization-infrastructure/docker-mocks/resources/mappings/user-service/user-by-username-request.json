@@ -3,11 +3,6 @@
   "request": {
     "method": "GET",
     "urlPath": "/api/user",
-    "headers": {
-      "Accept": {
-        "contains": "json"
-      }
-    },
     "queryParameters": {
       "username": {
         "equalTo": "username"
@@ -16,6 +11,9 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "user-service/user-by-username-response.json"
+    "bodyFileName": "user-service/user-by-username-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
   }
 }

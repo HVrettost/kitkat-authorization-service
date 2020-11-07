@@ -3,7 +3,6 @@ package kitkat.auth.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import kitkat.auth.config.properties.JWTConfigProperties;
-import kitkat.auth.model.AuthenticationRequestDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,21 +17,21 @@ public class JwtUtils {
         this.dateUtils = dateUtils;
     }
 
-    public String generateAccessToken(AuthenticationRequestDto authenticationRequest) {
+    public String generateAccessToken(String username) {
         return JWT.create()
                 .withIssuer(jwtConfigProperties.getIssuer())
-                .withIssuedAt(dateUtils.getCurrentDate())
-                .withExpiresAt(dateUtils.getCurrentDateWithOffset(jwtConfigProperties.getAccessTokenExpirationIntervalInMillis()))
-                .withSubject(authenticationRequest.getUsername())
+                .withIssuedAt(dateUtils.getCurrentUTCDate())
+                .withExpiresAt(dateUtils.getCurrentUTCDateWithOffset(jwtConfigProperties.getAccessTokenExpirationIntervalInMillis()))
+                .withSubject(username)
                 .sign(Algorithm.HMAC256(jwtConfigProperties.getSecret()));
     }
 
-    public String generateRefreshToken(AuthenticationRequestDto authenticationRequest) {
+    public String generateRefreshToken(String username) {
         return JWT.create()
                 .withIssuer(jwtConfigProperties.getIssuer())
-                .withIssuedAt(dateUtils.getCurrentDate())
-                .withExpiresAt(dateUtils.getCurrentDateWithOffset(jwtConfigProperties.getRefreshTokenExpirationIntervalInMillis()))
-                .withSubject(authenticationRequest.getUsername())
+                .withIssuedAt(dateUtils.getCurrentUTCDate())
+                .withExpiresAt(dateUtils.getCurrentUTCDateWithOffset(jwtConfigProperties.getRefreshTokenExpirationIntervalInMillis()))
+                .withSubject(username)
                 .sign(Algorithm.HMAC256(jwtConfigProperties.getSecret()));
     }
 }
