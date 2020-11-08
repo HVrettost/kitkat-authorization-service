@@ -21,7 +21,4 @@ public interface AuthTokenApi {
                 consumes = MediaType.APPLICATION_JSON_VALUE,
                 produces = MediaType.APPLICATION_JSON_VALUE)
     AuthTokenDto updateAccessToken(@RequestBody AuthTokenDto authTokenDto);
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    AuthTokenDto getTokenByUsername(@RequestParam(value = "username") String username);
 }

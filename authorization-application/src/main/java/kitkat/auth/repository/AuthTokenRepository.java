@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface AuthTokenRepository extends JpaRepository<AuthToken, String> {
 
@@ -20,7 +18,4 @@ public interface AuthTokenRepository extends JpaRepository<AuthToken, String> {
     @Query("UPDATE AuthToken at SET at.accessToken = :accessToken WHERE at.username = :username")
     void updateAccessTokenByUsername(@Param("username") String username,
                                      @Param("accessToken") String accessToken);
-
-    Optional<AuthToken> findTokenByUsername(@Param("username") String username);
-
 }

@@ -6,7 +6,6 @@ public class AuthTokenDto {
     private String username;
     private String accessToken;
     private String refreshToken;
-    private String scope;
 
     public String getTokenType() {
         return tokenType;
@@ -38,13 +37,5 @@ public class AuthTokenDto {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
     }
 }

@@ -36,10 +36,4 @@ public class AuthTokenDaoImpl implements AuthTokenDao {
     public void invalidateToken(String username) {
         authTokenRepository.deleteByUsername(username);
     }
-
-    @Override
-    public AuthTokenDto getTokenByUsername(String username) {
-        AuthToken authToken = authTokenRepository.findTokenByUsername(username).orElse(new AuthToken());
-        return authTokenMapper.toDto(authToken);
-    }
 }

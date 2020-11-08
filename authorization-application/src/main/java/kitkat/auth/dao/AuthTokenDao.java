@@ -8,7 +8,5 @@ public interface AuthTokenDao {
 
     void invalidateToken(String username);
 
-    AuthTokenDto getTokenByUsername(String username);
-
     void updateAccessTokenByUsername(AuthTokenDto authTokenDto);
 }

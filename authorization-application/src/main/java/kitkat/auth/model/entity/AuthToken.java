@@ -23,9 +23,6 @@ public class AuthToken {
     @Column(name = "REFRESH_TOKEN")
     private String refreshToken;
 
-    @Column(name = "SCOPE")
-    private String scope;
-
     public String getTokenType() {
         return tokenType;
     }
@@ -56,13 +53,5 @@ public class AuthToken {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
     }
 }

@@ -10,5 +10,5 @@ public interface AuthTokenService {
 
     AuthTokenDto updateAccessToken(AuthTokenDto authTokenDto);
 
-    AuthTokenDto getTokenByUsername(String username);
+    AuthTokenDto createAuthTokenDto(String username, String permissions);
 }

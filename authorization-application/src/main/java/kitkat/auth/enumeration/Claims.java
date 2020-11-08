@@ -2,7 +2,7 @@ package kitkat.auth.enumeration;
 
 public enum Claims {
 
-    USER_ID("userId");
+    PERMISSIONS("perms");
 
     private final String value;
 

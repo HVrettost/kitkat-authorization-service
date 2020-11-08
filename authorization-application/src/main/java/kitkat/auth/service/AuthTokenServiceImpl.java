@@ -1,6 +1,7 @@
 package kitkat.auth.service;
 
 import kitkat.auth.dao.AuthTokenDao;
+import kitkat.auth.enumeration.TokenType;
 import kitkat.auth.model.dto.AuthTokenDto;
 import kitkat.auth.util.JwtUtils;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     @Transactional
     public void invalidateToken(AuthTokenDto authTokenDto) {
-        jwtUtils.validateAccessToken(authTokenDto);
         authTokenDao.invalidateToken(authTokenDto.getUsername());
     }
 
@@ -34,8 +34,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     @Transactional
     public AuthTokenDto updateAccessToken(AuthTokenDto authTokenDto) {
-        jwtUtils.validateRefreshToken(authTokenDto);
-        String accessToken = jwtUtils.generateAccessToken(authTokenDto.getUsername());
+        String accessToken = jwtUtils.generateAccessToken(authTokenDto.getUsername(), jwtUtils.extractPermissionsClaim(authTokenDto.getAccessToken()));
         authTokenDto.setAccessToken(accessToken);
         authTokenDao.updateAccessTokenByUsername(authTokenDto);
 
@@ -43,10 +42,12 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     }
 
     @Override
-    public AuthTokenDto getTokenByUsername(String username) {
-        AuthTokenDto authTokenDto = authTokenDao.getTokenByUsername(username);
-        jwtUtils.validateAccessToken(authTokenDto);
-        jwtUtils.validateRefreshToken(authTokenDto);
+    public AuthTokenDto createAuthTokenDto(String username, String permissions) {
+        AuthTokenDto authTokenDto = new AuthTokenDto();
+        authTokenDto.setTokenType(TokenType.BEARER.getValue());
+        authTokenDto.setUsername(username);
+        authTokenDto.setAccessToken(jwtUtils.generateAccessToken(username, permissions));
+        authTokenDto.setRefreshToken(jwtUtils.generateRefreshToken(username));
 
         return authTokenDto;
     }

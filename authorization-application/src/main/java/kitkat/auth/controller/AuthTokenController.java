@@ -33,9 +33,4 @@ public class AuthTokenController implements AuthTokenApi {
     public AuthTokenDto updateAccessToken(AuthTokenDto authTokenDto) {
         return authTokenService.updateAccessToken(authTokenDto);
     }
-
-    @Override
-    public AuthTokenDto getTokenByUsername(String username) {
-        return authTokenService.getTokenByUsername(username);
-    }
 }
