@@ -10,6 +10,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.postgresql:postgresql:42.2.17'
     implementation 'org.modelmapper:modelmapper:2.3.8'
+    implementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 mainClassName = 'kitkat.auth.app.AuthorizationApplication'
