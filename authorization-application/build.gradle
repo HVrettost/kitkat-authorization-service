@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'application'
+    id 'info.solidsoft.pitest' version '1.5.1'
 }
 
 dependencies {
@@ -18,4 +19,8 @@ mainClassName = 'kitkat.auth.app.AuthorizationApplication'
 bootRun {
     dependsOn ':authorization-infrastructure:migrationStart', ':authorization-infrastructure:wiremockStart'
     finalizedBy ':authorization-infrastructure:wiremockStop', ':authorization-infrastructure:postgresStop'
+}
+
+pitest {
+    reportDir file(project.buildDir.path + '/pitestReports')
 }

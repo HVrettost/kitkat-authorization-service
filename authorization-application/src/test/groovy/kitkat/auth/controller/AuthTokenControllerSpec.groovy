@@ -33,4 +33,32 @@ class AuthTokenControllerSpec extends Specification {
         and:
             response == token
     }
+
+    def "Should delegate call to service in order to invalidate token"() {
+        given:
+            AuthTokenDto authTokenDto = Mock()
+
+        when:
+            authTokenController.invalidateToken(authTokenDto)
+
+        then:
+            1 * authTokenService.invalidateToken(authTokenDto)
+            0 * _
+    }
+
+    def "Should delegate call to service in order to update access token"() {
+        given:
+            AuthTokenDto authTokenRequestDto = Mock()
+            AuthTokenDto authTokenResponseDto = Mock()
+
+        when:
+            def response = authTokenController.updateAccessToken(authTokenRequestDto)
+
+        then:
+            1 * authTokenService.updateAccessToken(authTokenRequestDto) >> authTokenResponseDto
+            0 * _
+
+        and:
+            response == authTokenResponseDto
+    }
 }
