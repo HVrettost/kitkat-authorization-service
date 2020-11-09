@@ -1,0 +1,27 @@
+plugins {
+    id 'checkstyle'
+}
+
+group 'kitkat.auth'
+version '1.0'
+
+def authorizationQualityCheckProjectBuildDir = project.buildDir
+
+checkstyle {
+    version '8.37'
+    reportsDir file("$authorizationQualityCheckProjectBuildDir/checkstyleReports")
+    configDir project.file('config/checkstyle')
+    configFile project.file('config/checkstyle/checkstyle.xml')
+    ignoreFailures false
+    showViolations true
+    maxErrors 0
+    checkstyleMain {
+        source {
+            files rootProject.files('authorization-application/src/main/java')
+        }
+        reports {
+            html.enabled true
+            xml.enabled false
+        }
+    }
+}

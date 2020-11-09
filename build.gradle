@@ -17,6 +17,7 @@ allprojects {
     group 'kitkat.auth'
     version '1.0'
 }
+
 subprojects {
     repositories {
         mavenCentral()

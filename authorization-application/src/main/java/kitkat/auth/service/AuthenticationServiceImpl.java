@@ -32,13 +32,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public AuthTokenDto authenticate(AuthenticationRequestDto authenticationRequest) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+                    authenticationRequest.getPassword()));
 
             String permissions = getUserPermissions(authenticationRequest.getUsername());
             AuthTokenDto authTokenDto = authTokenService.createAuthTokenDto(authenticationRequest.getUsername(), permissions);
 
             return authTokenService.invalidateTokenIfExistsAndSaveNewToken(authTokenDto);
-        } catch(BadCredentialsException badCredentialsException) {
+        } catch (BadCredentialsException badCredentialsException) {
             LOGGER.info("Bad credentials given for user: ",  badCredentialsException);
             throw new BadCredentialsException("Bad credentials given!");
         }

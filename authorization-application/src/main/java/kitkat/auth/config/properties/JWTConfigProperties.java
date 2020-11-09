@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @ConfigurationProperties(prefix = "kitkat.auth.jwt")
 @PropertySource("classpath:jwt.properties")
-public class JWTConfigProperties {
+public final class JWTConfigProperties {
 
     private String issuer;
     private String secret;

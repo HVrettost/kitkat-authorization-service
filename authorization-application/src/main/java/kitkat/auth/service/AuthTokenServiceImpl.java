@@ -34,8 +34,8 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     @Transactional
     public AuthTokenDto updateAccessToken(AuthTokenDto authTokenDto) {
-        String accessToken = jwtUtils.generateAccessToken(authTokenDto.getUsername(), jwtUtils.extractPermissionsClaim(authTokenDto.getAccessToken()));
-        authTokenDto.setAccessToken(accessToken);
+        String token = jwtUtils.generateAccessToken(authTokenDto.getUsername(), jwtUtils.extractPermissionsClaim(authTokenDto.getAccessToken()));
+        authTokenDto.setAccessToken(token);
         authTokenDao.updateAccessTokenByUsername(authTokenDto);
 
         return authTokenDto;

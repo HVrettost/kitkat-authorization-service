@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class AuthRoleToUsername {
 
     @Id
-    @Column(name ="USERNAME")
+    @Column(name = "USERNAME")
     private String username;
 
     @Column(name = "ROLE")

@@ -27,9 +27,8 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     private String constructUri(String resourcePath, Map<String, String> queryParameters) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(userServiceBaseUrl+resourcePath);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(userServiceBaseUrl + resourcePath);
         queryParameters.entrySet()
-                .stream()
                 .forEach(entry -> builder.queryParam(entry.getKey(), entry.getValue()));
 
         return builder.build().toString();

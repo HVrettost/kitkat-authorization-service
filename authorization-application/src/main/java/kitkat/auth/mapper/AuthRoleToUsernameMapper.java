@@ -6,7 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthRoleToUsernameMapper implements DtoMapper<AuthRoleToUsernameDto, AuthRoleToUsername>, EntityMapper<AuthRoleToUsername, AuthRoleToUsernameDto> {
+public class AuthRoleToUsernameMapper implements DtoMapper<AuthRoleToUsernameDto, AuthRoleToUsername>,
+        EntityMapper<AuthRoleToUsername, AuthRoleToUsernameDto> {
 
     private final ModelMapper modelMapper;
 

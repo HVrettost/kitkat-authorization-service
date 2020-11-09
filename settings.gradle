@@ -2,3 +2,5 @@ rootProject.name = 'kitkat-authorization-service'
 
 include 'authorization-application'
 include 'authorization-infrastructure'
+include 'authorization-quality-check'
+

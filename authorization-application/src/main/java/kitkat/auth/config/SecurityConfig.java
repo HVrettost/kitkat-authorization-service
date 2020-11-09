@@ -2,6 +2,7 @@ package kitkat.auth.config;
 
 import kitkat.auth.filter.ValidateAuthTokenFilter;
 import kitkat.auth.util.JwtUtils;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
+    private static final String AUTH_ACCESS_TOKEN_URI = "/api/auth/token";
+    private static final String AUTH_REFRESH_TOKEN_URI = "api/auth/token/refresh";
+
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtUtils jwtUtils;
@@ -37,10 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/auth/token").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/auth/token").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/api/auth/token").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/auth/token/refresh").permitAll()
+                .antMatchers(HttpMethod.POST, AUTH_ACCESS_TOKEN_URI).permitAll()
+                .antMatchers(HttpMethod.DELETE, AUTH_ACCESS_TOKEN_URI).permitAll()
+                .antMatchers(HttpMethod.PUT, AUTH_REFRESH_TOKEN_URI).permitAll()
                 .anyRequest().denyAll()
                 .and()
                 .addFilterBefore(new ValidateAuthTokenFilter(jwtUtils), FilterSecurityInterceptor.class)
