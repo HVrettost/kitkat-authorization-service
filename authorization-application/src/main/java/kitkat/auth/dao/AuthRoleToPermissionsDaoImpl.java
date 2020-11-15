@@ -1,9 +1,9 @@
 package kitkat.auth.dao;
 
-import kitkat.auth.mapper.AuthRoleToPermissionsMapper;
-import kitkat.auth.model.dto.AuthRoleToPermissionsDto;
-import kitkat.auth.model.entity.AuthRoleToPermissions;
-import kitkat.auth.repository.AuthRoleToPermissionsRepository;
+import kitkat.auth.mapper.AuthRoleToAuthoritiesMapper;
+import kitkat.auth.model.dto.AuthRoleToAuthoritiesDto;
+import kitkat.auth.model.entity.AuthRoleToAuthorities;
+import kitkat.auth.repository.AuthRoleToAuthoritiesRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -11,18 +11,18 @@ import java.util.Optional;
 @Component
 public class AuthRoleToPermissionsDaoImpl implements AuthRoleToPermissionsDao {
 
-    private final AuthRoleToPermissionsRepository authRoleToPermissionsRepository;
-    private final AuthRoleToPermissionsMapper authRoleToPermissionsMapper;
+    private final AuthRoleToAuthoritiesRepository authRoleToAuthoritiesRepository;
+    private final AuthRoleToAuthoritiesMapper authRoleToAuthoritiesMapper;
 
-    public AuthRoleToPermissionsDaoImpl(AuthRoleToPermissionsRepository authRoleToPermissionsRepository,
-                                        AuthRoleToPermissionsMapper authRoleToPermissionsMapper) {
-        this.authRoleToPermissionsRepository = authRoleToPermissionsRepository;
-        this.authRoleToPermissionsMapper = authRoleToPermissionsMapper;
+    public AuthRoleToPermissionsDaoImpl(AuthRoleToAuthoritiesRepository authRoleToAuthoritiesRepository,
+                                        AuthRoleToAuthoritiesMapper authRoleToAuthoritiesMapper) {
+        this.authRoleToAuthoritiesRepository = authRoleToAuthoritiesRepository;
+        this.authRoleToAuthoritiesMapper = authRoleToAuthoritiesMapper;
     }
 
     @Override
-    public AuthRoleToPermissionsDto getPermissionsByAuthRole(String authRole) {
-        Optional<AuthRoleToPermissions> authRoleToPermissions = authRoleToPermissionsRepository.findByRole(authRole);
-        return authRoleToPermissionsMapper.toDto(authRoleToPermissions.orElse(new AuthRoleToPermissions()));
+    public AuthRoleToAuthoritiesDto getPermissionsByAuthRole(String authRole) {
+        Optional<AuthRoleToAuthorities> authRoleToPermissions = authRoleToAuthoritiesRepository.findByRole(authRole);
+        return authRoleToAuthoritiesMapper.toDto(authRoleToPermissions.orElse(new AuthRoleToAuthorities()));
     }
 }

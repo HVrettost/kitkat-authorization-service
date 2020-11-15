@@ -1,12 +1,12 @@
 package kitkat.auth.enumeration;
 
-public enum Claims {
+public enum CustomJwtClaims {
 
-    PERMISSIONS("perms");
+    AUTHORITIES("auths"), SUBJECT("sub");
 
     private final String value;
 
-    Claims(String value) {
+    CustomJwtClaims(String value) {
         this.value = value;
     }
 

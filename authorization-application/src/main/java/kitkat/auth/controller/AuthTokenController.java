@@ -7,6 +7,8 @@ import kitkat.auth.service.AuthTokenService;
 import kitkat.auth.service.AuthenticationService;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class AuthTokenController implements AuthTokenApi {
 
@@ -20,17 +22,22 @@ public class AuthTokenController implements AuthTokenApi {
     }
 
     @Override
-    public AuthTokenDto authenticate(AuthenticationRequestDto authenticationRequestDto) {
-        return authenticationService.authenticate(authenticationRequestDto);
+    public AuthTokenDto authenticate(HttpServletRequest httpServletRequest, AuthenticationRequestDto authenticationRequest) {
+        return authenticationService.authenticate(httpServletRequest, authenticationRequest);
     }
 
     @Override
-    public void invalidateToken(AuthTokenDto authTokenDto) {
-        authTokenService.invalidateToken(authTokenDto);
+    public void invalidateRefreshToken(HttpServletRequest httpServletRequest) {
+        authTokenService.invalidateRefreshToken(httpServletRequest);
     }
 
     @Override
-    public AuthTokenDto updateAccessToken(AuthTokenDto authTokenDto) {
-        return authTokenService.updateAccessToken(authTokenDto);
+    public AuthTokenDto updateAccessToken(HttpServletRequest httpServletRequest) {
+        return authTokenService.updateAccessToken(httpServletRequest);
+    }
+
+    @Override
+    public void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest) {
+        authTokenService.invalidateRefreshTokensByUsername(httpServletRequest);
     }
 }

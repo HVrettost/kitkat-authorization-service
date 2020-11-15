@@ -10,11 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages = {"kitkat.auth"})
 @EnableJpaRepositories(basePackages = {"kitkat.auth.repository"})
 @EntityScan(basePackages = {"kitkat.auth.model.entity"})
-public final class AuthorizationApplication {
-
-    private AuthorizationApplication() {
-
-    }
+public class AuthorizationApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AuthorizationApplication.class, args);

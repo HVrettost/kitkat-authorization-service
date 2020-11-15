@@ -2,17 +2,17 @@ package kitkat.auth.model.dto;
 
 public class AuthTokenDto {
 
-    private String tokenType;
     private String username;
     private String accessToken;
     private String refreshToken;
 
-    public String getTokenType() {
-        return tokenType;
+    public AuthTokenDto() {
     }
 
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
+    public AuthTokenDto(String username, String accessToken, String refreshToken) {
+        this.username = username;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
     public String getUsername() {

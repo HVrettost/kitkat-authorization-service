@@ -1,8 +1,8 @@
 package kitkat.auth.dao;
 
-import kitkat.auth.model.dto.AuthRoleToPermissionsDto;
+import kitkat.auth.model.dto.AuthRoleToAuthoritiesDto;
 
 public interface AuthRoleToPermissionsDao {
 
-    AuthRoleToPermissionsDto getPermissionsByAuthRole(String authRole);
+    AuthRoleToAuthoritiesDto getPermissionsByAuthRole(String authRole);
 }

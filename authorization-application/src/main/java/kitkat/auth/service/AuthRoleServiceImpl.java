@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import kitkat.auth.dao.AuthRoleToPermissionsDao;
 import kitkat.auth.dao.AuthRoleToUsernameDao;
-import kitkat.auth.model.dto.AuthRoleToPermissionsDto;
+import kitkat.auth.model.dto.AuthRoleToAuthoritiesDto;
 import kitkat.auth.model.dto.AuthRoleToUsernameDto;
 
 @Service
@@ -25,7 +25,7 @@ public class AuthRoleServiceImpl implements AuthRoleService {
     }
 
     @Override
-    public AuthRoleToPermissionsDto getPermissionsByAuthRole(String authRole) {
+    public AuthRoleToAuthoritiesDto getPermissionsByAuthRole(String authRole) {
         return authRoleToPermissionsDao.getPermissionsByAuthRole(authRole);
     }
 }

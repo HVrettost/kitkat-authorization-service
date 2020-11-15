@@ -2,11 +2,11 @@ package kitkat.auth.model.dto;
 
 import java.util.UUID;
 
-public class AuthRoleToPermissionsDto {
+public class AuthRoleToAuthoritiesDto {
 
     private UUID id;
     private String role;
-    private String permissions;
+    private String authorities;
 
     public UUID getId() {
         return id;
@@ -24,11 +24,11 @@ public class AuthRoleToPermissionsDto {
         this.role = role;
     }
 
-    public String getPermissions() {
-        return permissions;
+    public String getAuthorities() {
+        return authorities;
     }
 
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
+    public void setAuthorities(String authorities) {
+        this.authorities = authorities;
     }
 }

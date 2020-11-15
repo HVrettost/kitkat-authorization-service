@@ -2,13 +2,19 @@ package kitkat.auth.service;
 
 import kitkat.auth.model.dto.AuthTokenDto;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface AuthTokenService {
 
-    void invalidateToken(AuthTokenDto authTokenDto);
+    void invalidateRefreshToken(HttpServletRequest httpServletRequest);
 
-    AuthTokenDto invalidateTokenIfExistsAndSaveNewToken(AuthTokenDto authTokenDto);
+    void invalidateRefreshTokenIfExistsAndSaveNew(String refreshToken, String username, String userAgent);
 
-    AuthTokenDto updateAccessToken(AuthTokenDto authTokenDto);
+    AuthTokenDto updateAccessToken(HttpServletRequest httpServletRequest);
 
-    AuthTokenDto createAuthTokenDto(String username, String permissions);
+    AuthTokenDto createAuthTokenDto(String username, String permissions, String userAgent);
+
+    String getUserPermissions(String username);
+
+    void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest);
 }
