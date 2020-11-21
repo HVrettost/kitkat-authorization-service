@@ -1,10 +1,15 @@
 package kitkat.auth.model.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Getter
+@Setter
 @Entity
 @Table(schema = "AUTH", name = "AUTH_ROLE_TO_USERNAME")
 public class AuthRoleToUsername {
@@ -15,20 +20,4 @@ public class AuthRoleToUsername {
 
     @Column(name = "ROLE")
     private String role;
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

@@ -12,6 +12,8 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.2.17'
     implementation 'org.modelmapper:modelmapper:2.3.8'
     implementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 mainClassName = 'kitkat.auth.app.AuthorizationApplication'

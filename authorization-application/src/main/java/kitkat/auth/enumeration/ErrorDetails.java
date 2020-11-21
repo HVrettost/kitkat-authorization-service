@@ -5,9 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CustomJwtClaims {
+public class ErrorDetails {
 
-    AUTHORITIES("auths"), SUBJECT("sub");
-
-    private final String value;
+    private final int errorCode;
+    private final String message;
 }

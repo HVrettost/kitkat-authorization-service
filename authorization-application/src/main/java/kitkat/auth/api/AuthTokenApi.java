@@ -1,7 +1,6 @@
 package kitkat.auth.api;
 
-import kitkat.auth.model.dto.AuthTokenDto;
-import kitkat.auth.model.dto.AuthenticationRequestDto;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,28 +10,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import javax.servlet.http.HttpServletRequest;
+import kitkat.auth.exception.CoreException;
+import kitkat.auth.model.dto.AuthTokenDto;
+import kitkat.auth.model.dto.AuthenticationRequestDto;
 
 @RequestMapping(value = "/api/auth/token")
 public interface AuthTokenApi {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
                  consumes = MediaType.APPLICATION_JSON_VALUE)
-    AuthTokenDto authenticate(HttpServletRequest httpServletRequest, @RequestBody AuthenticationRequestDto authenticationRequest);
+    AuthTokenDto authenticate(HttpServletRequest httpServletRequest,
+                              @RequestBody AuthenticationRequestDto authenticationRequest) throws CoreException;
 
     @PreAuthorize("hasAuthority('REFRESH_TOKEN_DELETE')")
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
                    produces = MediaType.APPLICATION_JSON_VALUE)
-    void invalidateRefreshToken(HttpServletRequest httpServletRequest);
+    void invalidateRefreshToken(HttpServletRequest httpServletRequest) throws CoreException;
 
     @PreAuthorize("hasAuthority('REFRESH_TOKEN_ALL_DELETE')")
     @DeleteMapping(value = "/all",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest);
+    void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest) throws CoreException;
 
     @PutMapping(value = "/refresh",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    AuthTokenDto updateAccessToken(HttpServletRequest request);
+    AuthTokenDto updateAccessToken(HttpServletRequest request) throws CoreException;
 }

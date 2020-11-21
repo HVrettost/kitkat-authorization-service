@@ -38,4 +38,14 @@ public class RefreshTokenWhitelistDaoImpl implements RefreshTokenWhitelistDao {
     public void invalidateRefreshTokensByUsername(String username) {
         authTokenRepository.deleteAllByUsername(username);
     }
+
+    @Override
+    public boolean isRefreshTokenExistsByUsername(String username) {
+        return authTokenRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean isRefreshTokenExistsByUsernameAndUserAgent(String username, String userAgent) {
+        return authTokenRepository.existsByUsernameAndUserAgent(username, userAgent);
+    }
 }

@@ -1,13 +1,16 @@
 package kitkat.auth.service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
 import kitkat.auth.dao.RefreshTokenWhitelistDao;
+import kitkat.auth.exception.AuthorizationException;
+import kitkat.auth.exception.error.AuthError;
 import kitkat.auth.model.dto.AuthTokenDto;
 import kitkat.auth.util.HeaderUtils;
 import kitkat.auth.util.JwtUtils;
-import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 
 @Service
 public class AuthTokenServiceImpl implements AuthTokenService {
@@ -22,15 +25,6 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         this.refreshTokenWhitelistDao = refreshTokenWhitelistDao;
         this.jwtUtils = jwtUtils;
         this.authRoleService = authRoleService;
-    }
-
-    @Override
-    @Transactional
-    public void invalidateRefreshToken(HttpServletRequest httpServletRequest) {
-        String accessToken = HeaderUtils.extractAuthorizationHeader(httpServletRequest);
-        String userAgent = HeaderUtils.extractUserAgent(httpServletRequest);
-        String username = jwtUtils.extractSubjectClaim(accessToken);
-        refreshTokenWhitelistDao.invalidateRefreshToken(username, userAgent);
     }
 
     @Override
@@ -71,10 +65,28 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
     @Override
     @Transactional
+    public void invalidateRefreshToken(HttpServletRequest httpServletRequest) {
+        String accessToken = HeaderUtils.extractAuthorizationHeader(httpServletRequest);
+        String userAgent = HeaderUtils.extractUserAgent(httpServletRequest);
+        String username = jwtUtils.extractSubjectClaim(accessToken);
+
+        if (refreshTokenWhitelistDao.isRefreshTokenExistsByUsernameAndUserAgent(username, userAgent)) {
+            refreshTokenWhitelistDao.invalidateRefreshToken(username, userAgent);
+        } else {
+            throw new AuthorizationException(AuthError.REFRESH_TOKEN_NOT_FOUND);
+        }
+    }
+
+    @Override
+    @Transactional
     public void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest) {
         String accessToken = HeaderUtils.extractAuthorizationHeader(httpServletRequest);
         String username = jwtUtils.extractSubjectClaim(accessToken);
-        refreshTokenWhitelistDao.invalidateRefreshTokensByUsername(username);
+
+        if (refreshTokenWhitelistDao.isRefreshTokenExistsByUsername(username)) {
+            refreshTokenWhitelistDao.invalidateRefreshTokensByUsername(username);
+        } else {
+            throw new AuthorizationException(AuthError.REFRESH_TOKENS_NOT_FOUND);
+        }
     }
 }
-

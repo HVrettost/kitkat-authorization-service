@@ -1,5 +1,8 @@
 package kitkat.auth.model.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -9,6 +12,8 @@ import javax.persistence.Column;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
+@Getter
+@Setter
 @Entity
 @Table(schema = "AUTH", name = "REFRESH_TOKEN_WHITELIST")
 public class RefreshTokenWhitelist {
@@ -26,36 +31,4 @@ public class RefreshTokenWhitelist {
 
     @Column(name = "USER_AGENT")
     private String userAgent;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public String getUserAgent() {
-        return userAgent;
-    }
-
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
 }

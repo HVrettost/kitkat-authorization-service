@@ -11,38 +11,63 @@ import javax.servlet.ServletResponse;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kitkat.auth.enumeration.ErrorDetails;
+import kitkat.auth.exception.error.AuthError;
 import kitkat.auth.util.HeaderUtils;
 import kitkat.auth.util.JwtUtils;
 
 public class ValidateTokenFilter implements Filter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValidateTokenFilter.class);
+
     private static final String ACCESS_TOKEN_ENDPOINT = "/api/auth/token";
     private static final String REFRESH_TOKEN_ENDPOINT = "/api/auth/token/refresh";
 
     private final JwtUtils jwtUtils;
+    private final ObjectMapper objectMapper;
 
-    public ValidateTokenFilter(JwtUtils jwtUtils) {
+    public ValidateTokenFilter(JwtUtils jwtUtils,
+                               ObjectMapper objectMapper) {
         this.jwtUtils = jwtUtils;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
         if (!isAuthenticateRequest(httpRequest)) {
-            String token = HeaderUtils.extractAuthorizationHeader(httpRequest);
-            jwtUtils.validateToken(token);
+            try {
+                String token = HeaderUtils.extractAuthorizationHeader(httpRequest);
+                jwtUtils.validateToken(token);
 
-            if (!isUpdateAccessTokenRequest(httpRequest)) {
-                String permissions = jwtUtils.extractPermissionsClaim(token);
-                SecurityContextHolder.getContext()
-                        .setAuthentication(new UsernamePasswordAuthenticationToken(null, null, getUserGrantedAuthorities(permissions)));
+                if (!isUpdateAccessTokenRequest(httpRequest)) {
+                    String permissions = jwtUtils.extractPermissionsClaim(token);
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(new UsernamePasswordAuthenticationToken(null, null, getUserGrantedAuthorities(permissions)));
+                }
+            } catch (TokenExpiredException tokenExpiredException) {
+                LOGGER.error(tokenExpiredException.getMessage(), tokenExpiredException);
+                setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.TOKEN_EXPIRED);
+                return;
+            } catch (JWTVerificationException jwtVerificationException) {
+                LOGGER.error(jwtVerificationException.getMessage(), jwtVerificationException);
+                setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.INVALID_TOKEN);
+                return;
             }
         }
 
@@ -64,5 +89,11 @@ public class ValidateTokenFilter implements Filter {
                     .stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
+    }
+
+    private void setErrorDetailsAndStatusInServletResponse(HttpServletResponse httpResponse, AuthError authError) throws IOException {
+        ErrorDetails errorDetails = new ErrorDetails(authError.getErrorCode(), authError.getMessage());
+        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        httpResponse.getOutputStream().write(objectMapper.writeValueAsBytes(errorDetails));
     }
 }

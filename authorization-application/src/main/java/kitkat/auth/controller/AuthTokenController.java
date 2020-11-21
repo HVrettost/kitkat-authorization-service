@@ -1,13 +1,15 @@
 package kitkat.auth.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.bind.annotation.RestController;
+
 import kitkat.auth.api.AuthTokenApi;
 import kitkat.auth.model.dto.AuthTokenDto;
 import kitkat.auth.model.dto.AuthenticationRequestDto;
 import kitkat.auth.service.AuthTokenService;
 import kitkat.auth.service.AuthenticationService;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class AuthTokenController implements AuthTokenApi {

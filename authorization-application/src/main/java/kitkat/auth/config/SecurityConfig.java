@@ -1,5 +1,6 @@
 package kitkat.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kitkat.auth.filter.ValidateTokenFilter;
 import kitkat.auth.util.JwtUtils;
 
@@ -31,13 +32,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtUtils jwtUtils;
+    private final ObjectMapper objectMapper;
 
     public SecurityConfig(UserDetailsService userDetailsService,
                           BCryptPasswordEncoder bCryptPasswordEncoder,
-                          JwtUtils jwtUtils) {
+                          JwtUtils jwtUtils,
+                          ObjectMapper objectMapper) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtUtils = jwtUtils;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .antMatchers(HttpMethod.DELETE, AUTH_REFRESH_TOKEN_ALL_URI).permitAll()
                 .anyRequest().denyAll()
                 .and()
-                .addFilterBefore(new ValidateTokenFilter(jwtUtils), FilterSecurityInterceptor.class)
+                .addFilterBefore(new ValidateTokenFilter(jwtUtils, objectMapper), FilterSecurityInterceptor.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

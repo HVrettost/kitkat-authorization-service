@@ -1,19 +1,19 @@
 package kitkat.auth.gateway;
 
-import kitkat.auth.model.dto.UserDto;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Map;
+import kitkat.auth.model.dto.UserDto;
 
 @Component
 public class UserServiceGatewayImpl implements UserServiceGateway {
 
+    private static final String USER_SERVICE_BASE_URL = "http://localhost:8905";
     private static final String USER_URI = "/api/user";
-
-    private String userServiceBaseUrl = "http://localhost:8905";
 
     private final RestTemplate restTemplate;
 
@@ -27,9 +27,8 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     private String constructUri(String resourcePath, Map<String, String> queryParameters) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(userServiceBaseUrl + resourcePath);
-        queryParameters.entrySet()
-                .forEach(entry -> builder.queryParam(entry.getKey(), entry.getValue()));
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(USER_SERVICE_BASE_URL + resourcePath);
+        queryParameters.forEach(builder::queryParam);
 
         return builder.build().toString();
     }
