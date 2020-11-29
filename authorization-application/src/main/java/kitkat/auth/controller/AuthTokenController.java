@@ -1,15 +1,14 @@
 package kitkat.auth.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import kitkat.auth.api.AuthTokenApi;
-import kitkat.auth.model.dto.AuthTokenDto;
 import kitkat.auth.model.dto.AuthenticationRequestDto;
 import kitkat.auth.service.AuthTokenService;
 import kitkat.auth.service.AuthenticationService;
-
 
 @RestController
 public class AuthTokenController implements AuthTokenApi {
@@ -24,22 +23,31 @@ public class AuthTokenController implements AuthTokenApi {
     }
 
     @Override
-    public AuthTokenDto authenticate(HttpServletRequest httpServletRequest, AuthenticationRequestDto authenticationRequest) {
-        return authenticationService.authenticate(httpServletRequest, authenticationRequest);
+    public void authenticate(HttpServletRequest httpServletRequest,
+                             HttpServletResponse httpServletResponse,
+                             AuthenticationRequestDto authenticationRequest) {
+        authenticationService.authenticate(httpServletRequest, httpServletResponse, authenticationRequest);
+        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     @Override
-    public void invalidateRefreshToken(HttpServletRequest httpServletRequest) {
+    public void invalidateRefreshToken(HttpServletRequest httpServletRequest,
+                                       HttpServletResponse httpServletResponse) {
         authTokenService.invalidateRefreshToken(httpServletRequest);
+        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     @Override
-    public AuthTokenDto updateAccessToken(HttpServletRequest httpServletRequest) {
-        return authTokenService.updateAccessToken(httpServletRequest);
+    public void updateAccessToken(HttpServletRequest httpServletRequest,
+                                  HttpServletResponse httpServletResponse) {
+        authTokenService.updateAccessToken(httpServletRequest, httpServletResponse);
+        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     @Override
-    public void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest) {
+    public void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest,
+                                                  HttpServletResponse httpServletResponse) {
         authTokenService.invalidateRefreshTokensByUsername(httpServletRequest);
+        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

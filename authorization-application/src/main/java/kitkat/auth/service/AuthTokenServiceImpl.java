@@ -1,6 +1,7 @@
 package kitkat.auth.service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import kitkat.auth.dao.RefreshTokenWhitelistDao;
 import kitkat.auth.exception.AuthorizationException;
 import kitkat.auth.exception.error.AuthError;
-import kitkat.auth.model.dto.AuthTokenDto;
+import kitkat.auth.util.CookieUtils;
 import kitkat.auth.util.HeaderUtils;
 import kitkat.auth.util.JwtUtils;
 
@@ -18,13 +19,16 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     private final RefreshTokenWhitelistDao refreshTokenWhitelistDao;
     private final JwtUtils jwtUtils;
     private final AuthRoleService authRoleService;
+    private final CookieUtils cookieUtils;
 
     public AuthTokenServiceImpl(RefreshTokenWhitelistDao refreshTokenWhitelistDao,
                                 JwtUtils jwtUtils,
-                                AuthRoleService authRoleService) {
+                                AuthRoleService authRoleService,
+                                CookieUtils cookieUtils) {
         this.refreshTokenWhitelistDao = refreshTokenWhitelistDao;
         this.jwtUtils = jwtUtils;
         this.authRoleService = authRoleService;
+        this.cookieUtils = cookieUtils;
     }
 
     @Override
@@ -37,24 +41,12 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     }
 
     @Override
-    @Transactional
-    public AuthTokenDto updateAccessToken(HttpServletRequest httpServletRequest) {
+    public void updateAccessToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String refreshToken = HeaderUtils.extractAuthorizationHeader(httpServletRequest);
         String username = jwtUtils.extractSubjectClaim(refreshToken);
         String permissions = getUserPermissions(username);
         String accessToken = jwtUtils.generateAccessToken(username, permissions);
-
-        return new AuthTokenDto(username, accessToken, refreshToken);
-    }
-
-    @Override
-    public AuthTokenDto createAuthTokenDto(String username, String permissions, String userAgent) {
-        AuthTokenDto authTokenDto = new AuthTokenDto();
-        authTokenDto.setUsername(username);
-        authTokenDto.setAccessToken(jwtUtils.generateAccessToken(username, permissions));
-        authTokenDto.setRefreshToken(jwtUtils.generateRefreshToken(username));
-
-        return authTokenDto;
+        httpServletResponse.addCookie(cookieUtils.createAccessTokenCookie(accessToken));
     }
 
     @Override
