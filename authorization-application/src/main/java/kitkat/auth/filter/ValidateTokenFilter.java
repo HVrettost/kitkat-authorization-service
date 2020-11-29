@@ -50,7 +50,8 @@ public class ValidateTokenFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        if (!isAuthenticateRequest(httpRequest)) {
+
+        if (!isAuthenticateRequest(httpRequest) && !isOptionsHttpMethod(httpRequest)) {
             try {
                 String token = HeaderUtils.extractAuthorizationHeader(httpRequest);
                 jwtUtils.validateToken(token);
@@ -80,6 +81,10 @@ public class ValidateTokenFilter implements Filter {
 
     private boolean isAuthenticateRequest(HttpServletRequest request) {
         return HttpMethod.POST.name().equals(request.getMethod()) && ACCESS_TOKEN_ENDPOINT.equals(request.getRequestURI());
+    }
+
+    private boolean isOptionsHttpMethod(HttpServletRequest request) {
+        return HttpMethod.OPTIONS.name().equals(request.getMethod());
     }
 
     private List<GrantedAuthority> getUserGrantedAuthorities(String authorities) {

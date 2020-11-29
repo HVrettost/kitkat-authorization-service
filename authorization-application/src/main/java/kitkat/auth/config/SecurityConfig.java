@@ -6,6 +6,7 @@ import kitkat.auth.util.JwtUtils;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -52,15 +55,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .antMatchers(HttpMethod.DELETE, AUTH_ACCESS_TOKEN_URI).permitAll()
                 .antMatchers(HttpMethod.PUT, AUTH_REFRESH_TOKEN_URI).permitAll()
                 .antMatchers(HttpMethod.DELETE, AUTH_REFRESH_TOKEN_ALL_URI).permitAll()
+                .antMatchers(HttpMethod.OPTIONS, AUTH_ACCESS_TOKEN_URI).permitAll()
+                .antMatchers(HttpMethod.OPTIONS, AUTH_REFRESH_TOKEN_URI).permitAll()
+                .antMatchers(HttpMethod.OPTIONS, AUTH_REFRESH_TOKEN_ALL_URI).permitAll()
                 .anyRequest().denyAll()
                 .and()
-                .addFilterBefore(new ValidateTokenFilter(jwtUtils, objectMapper), FilterSecurityInterceptor.class)
+                .addFilterAfter(new ValidateTokenFilter(jwtUtils, objectMapper), FilterSecurityInterceptor.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
+        registry.addMapping("/api/auth/token/**")
+                .allowedOrigins("http://localhost:8529")
+                .allowedMethods(HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name());
     }
 
     @Override
