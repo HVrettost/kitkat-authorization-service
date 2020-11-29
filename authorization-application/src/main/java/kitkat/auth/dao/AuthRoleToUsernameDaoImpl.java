@@ -1,12 +1,12 @@
 package kitkat.auth.dao;
 
+import kitkat.auth.exception.AuthorizationException;
+import kitkat.auth.exception.error.AuthError;
 import kitkat.auth.mapper.AuthRoleToUsernameMapper;
 import kitkat.auth.model.dto.AuthRoleToUsernameDto;
 import kitkat.auth.model.entity.AuthRoleToUsername;
 import kitkat.auth.repository.AuthRoleToUsernameRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class AuthRoleToUsernameDaoImpl implements AuthRoleToUsernameDao {
@@ -22,7 +22,8 @@ public class AuthRoleToUsernameDaoImpl implements AuthRoleToUsernameDao {
 
     @Override
     public AuthRoleToUsernameDto getAuthRoleByUsername(String username) {
-        Optional<AuthRoleToUsername> authRoleToUsername = authRoleToUsernameRepository.findByUsername(username);
-        return authRoleToUsernameMapper.toDto(authRoleToUsername.orElse(new AuthRoleToUsername()));
+        AuthRoleToUsername authRoleToUsername = authRoleToUsernameRepository.findByUsername(username)
+                .orElseThrow(() -> new AuthorizationException(AuthError.AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND));
+        return authRoleToUsernameMapper.toDto(authRoleToUsername);
     }
 }

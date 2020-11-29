@@ -1,10 +1,10 @@
 package kitkat.auth.dao;
 
+import org.springframework.stereotype.Component;
+
 import kitkat.auth.mapper.RefreshTokenWhitelistMapper;
 import kitkat.auth.model.entity.RefreshTokenWhitelist;
 import kitkat.auth.repository.AuthTokenRepository;
-
-import org.springframework.stereotype.Component;
 
 @Component
 public class RefreshTokenWhitelistDaoImpl implements RefreshTokenWhitelistDao {

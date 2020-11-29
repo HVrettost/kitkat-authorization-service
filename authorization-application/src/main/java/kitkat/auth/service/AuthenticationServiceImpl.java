@@ -39,8 +39,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                 authenticationRequest.getPassword()));
 
-        String permissions = authTokenService.getUserPermissions(authenticationRequest.getUsername());
         String userAgent = HeaderUtils.extractUserAgent(httpServletRequest);
+        String permissions = authTokenService.getUserPermissions(authenticationRequest.getUsername());
         String accessToken = jwtUtils.generateAccessToken(authenticationRequest.getUsername(), permissions);
         String refreshToken = jwtUtils.generateRefreshToken(authenticationRequest.getUsername());
 
