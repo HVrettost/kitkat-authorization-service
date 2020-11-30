@@ -15,6 +15,7 @@ public class CookieUtils {
         Cookie accessTokenCookie = new Cookie(ACCESS_TOKEN_COOKIE_NAME, cookieValue);
         accessTokenCookie.setPath(COOKIE_PATH);
         accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setDomain("127.0.0.1");
 
         return accessTokenCookie;
     }
@@ -23,6 +24,7 @@ public class CookieUtils {
         Cookie refreshTokenCookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, cookieValue);
         refreshTokenCookie.setPath(COOKIE_PATH);
         refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setDomain("127.0.0.1");
 
         return refreshTokenCookie;
     }
