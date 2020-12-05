@@ -3,6 +3,7 @@ package kitkat.auth.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import kitkat.auth.api.AuthTokenApi;

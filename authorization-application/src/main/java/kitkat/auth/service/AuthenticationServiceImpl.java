@@ -3,6 +3,7 @@ package kitkat.auth.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         authTokenService.invalidateRefreshTokenIfExistsAndSaveNew(refreshToken, authenticationRequest.getUsername(), userAgent);
 
-        httpServletResponse.addCookie(cookieUtils.createAccessTokenCookie(accessToken));
-        httpServletResponse.addCookie(cookieUtils.createRefreshTokenCookie(refreshToken));
+        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookieUtils.createAccessTokenCookie(accessToken));
+        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookieUtils.createRefreshTokenCookie(refreshToken));
+        //httpServletResponse.addCookie(cookieUtils.createAccessTokenCookie(accessToken));
+        //httpServletResponse.addCookie(cookieUtils.createRefreshTokenCookie(refreshToken));
     }
 }

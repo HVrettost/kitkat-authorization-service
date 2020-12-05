@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import kitkat.auth.dao.RefreshTokenWhitelistDao;
@@ -46,7 +47,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         String username = jwtUtils.extractSubjectClaim(refreshToken);
         String permissions = getUserPermissions(username);
         String accessToken = jwtUtils.generateAccessToken(username, permissions);
-        httpServletResponse.addCookie(cookieUtils.createAccessTokenCookie(accessToken));
+        httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, cookieUtils.createAccessTokenCookie(accessToken));
     }
 
     @Override

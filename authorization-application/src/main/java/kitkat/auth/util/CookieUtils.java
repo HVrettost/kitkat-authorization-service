@@ -1,7 +1,5 @@
 package kitkat.auth.util;
 
-import javax.servlet.http.Cookie;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,23 +7,14 @@ public class CookieUtils {
 
     private static final String ACCESS_TOKEN_COOKIE_NAME = "accessToken";
     private static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
-    private static final String COOKIE_PATH = "/auth/token";
+    private static final String COOKIE_PATH = "api/auth/token";
+    //Make it parameterized for all cookie parameter
 
-    public Cookie createAccessTokenCookie(String cookieValue) {
-        Cookie accessTokenCookie = new Cookie(ACCESS_TOKEN_COOKIE_NAME, cookieValue);
-        accessTokenCookie.setPath(COOKIE_PATH);
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setDomain("127.0.0.1");
-
-        return accessTokenCookie;
+    public String createAccessTokenCookie(String accessToken) {
+        return ACCESS_TOKEN_COOKIE_NAME + "=" + accessToken + "; Path=" + COOKIE_PATH + "; HttpOnly; Domain=localhost; SameSite=None; Secure";
     }
 
-    public Cookie createRefreshTokenCookie(String cookieValue) {
-        Cookie refreshTokenCookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, cookieValue);
-        refreshTokenCookie.setPath(COOKIE_PATH);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setDomain("127.0.0.1");
-
-        return refreshTokenCookie;
+    public String createRefreshTokenCookie(String refreshToken) {
+        return REFRESH_TOKEN_COOKIE_NAME + "=" + refreshToken + "; Path=" + COOKIE_PATH + "; HttpOnly; Domain=localhost; SameSite=None; Secure";
     }
 }

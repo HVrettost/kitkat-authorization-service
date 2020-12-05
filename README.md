@@ -58,3 +58,10 @@ PUT http://localhost:8900/api/auth/token
 Headers:
     Authorization: Bearer refresh-token
     Content-Type: application/json
+    
+Generating a Keystore(Cryptograhic Keys)
+1) keytool -genkeypair -alias kitkat_auth -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore kitkat_auth.p12 -validity 3650
+* Set as password the word -> password
+* We can ommit the completion of the asked question and press yes at the end
+
+    
