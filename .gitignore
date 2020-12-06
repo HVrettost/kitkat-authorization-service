@@ -1,3 +1,4 @@
 .gradle
 .idea
 build
+authorization-application/src/main/resources/keystore
