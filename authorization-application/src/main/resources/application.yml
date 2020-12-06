@@ -4,7 +4,6 @@ server:
     key-store-type: PKCS12
     key-store: classpath:keystore/kitkat_auth.p12
     key-store-password: password
-    key-alias: kitkat_auth
     enabled: true
 
 spring:
