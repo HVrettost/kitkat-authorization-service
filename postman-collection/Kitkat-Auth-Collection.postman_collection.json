@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "a0d6ad2f-d767-4d52-87f1-e0eeb0265024",
+		"name": "Kitkat-Auth-Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7fbfb74b-75d9-4be8-96d0-87ad658eb6dc",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "47b3ca78-9532-4803-ac1c-4ee5ab8eb80e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"username\",\n\t\"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{environment}}:{{port}}/api/auth/token",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{environment}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalidate Refresh Token by username and user-agent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cf1fd7c2-bc2f-4dab-98b9-d0e7dd5c7f92",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}://{{environment}}:{{port}}/api/auth/token",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{environment}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Access Token with Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ac3459e-cf0f-4f6f-8b4c-70161c0a929d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableCookies": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{protocol}}://{{environment}}:{{port}}/api/auth/token/refresh",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{environment}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth",
+						"token",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalidate all refresh tokens by username",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImF1dGhzIjoiUkVGUkVTSF9UT0tFTl9ERUxFVEUgUkVGUkVTSF9UT0tFTl9BTExfREVMRVRFIiwiaXNzIjoiZDIwYjcxZTgwMzVkNGYzMDBhZmRlMDEzYTZlOGRkOGQ3ZTg5NTE2OTVmZTk2NTg2NTg4ODQ5MzRlYzM1NTBlNyIsImV4cCI6MTYwNjY3NTc5OSwiaWF0IjoxNjA2Njc1NDk5fQ.tOIvCiMAogIg-GSjqpIKKZncREt6zDxvlAV6ujOAiHc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{protocol}}://{{environment}}:{{port}}/api/auth/token/all",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{environment}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth",
+						"token",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

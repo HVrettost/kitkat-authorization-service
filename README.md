@@ -24,44 +24,15 @@ What you will need before starting the service:
 - In order to remove postgres and migration container and associated volumes type the command ./gradlew postgresStop
 - In order to remove wiremock container and associated volumes type the command ./gradlew wiremockStop
 
-API endpoints:
----------------------------------------------------------------------------
-In order to get the JWT token:
-POST http://localhost:8900/api/auth/token with body 
+ENDPOINTS DOCUMENTATION
+-----------------------
+We can view all endpoints from the postman collection in postman-collection folder
 
-{
-    "username": "username",
-    "password": "password"
-}
+CREATE A SELF SIGNED CERTIFICATE
+--------------------------------
+- The authorization service can accept only connections over https(SSL) we need to create a self signed certificate.
+- Java can understand only two types of certificates JKS and PKCS12. In our case we are using the latter one. 
+- We need to create a .p12 file under kitkat-authorization-service/authorization-application/src/main/resources/keystore with name (kitkat_auth.p12)
 
-Headers:
-    User-Agent: ...
-    Content-Type: application/json
----------------------------------------------------------------------------
-In order to invalidate a refresh token per user agent and logout the user
-DELETE http://localhost:8900/api/auth/token
-Headers:
-    Authorization: Bearer access-token
-    User-Agent: ...
-    Content-Type: application/json
-
----------------------------------------------------------------------------
-In order to invalidate all refresh tokens of user
-DELETE http://localhost:8900/api/auth/token/all
-Headers:
-    Authorization: Bearer access-token
-    Content-Type: application/json
-    
----------------------------------------------------------------------------
-In order to update access token with refresh token
-PUT http://localhost:8900/api/auth/token
-Headers:
-    Authorization: Bearer refresh-token
-    Content-Type: application/json
-    
-Generating a Keystore(Cryptograhic Keys)
-1) keytool -genkeypair -alias kitkat_auth -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore kitkat_auth.p12 -validity 3650
-* Set as password the word -> password
-* We can ommit the completion of the asked question and press yes at the end
-
-    
+Instructions on how to create valid certificates are in the README.md of kitkat-front-end repo. The .p12 file should be exported from the .pem files of
+the front end application and imported in the path mentioned above.
