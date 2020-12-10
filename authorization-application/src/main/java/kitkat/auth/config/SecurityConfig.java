@@ -1,9 +1,5 @@
 package kitkat.auth.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kitkat.auth.filter.ValidateTokenFilter;
-import kitkat.auth.util.JwtUtils;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +17,12 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kitkat.auth.filter.AuthorizationFilter;
+import kitkat.auth.jwt.util.JwtClaimUtils;
+import kitkat.auth.jwt.validator.JwtValidator;
+import kitkat.auth.util.HeaderUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -34,17 +35,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final JwtUtils jwtUtils;
+    private final JwtClaimUtils jwtClaimUtils;
+    private final JwtValidator jwtValidator;
     private final ObjectMapper objectMapper;
+    private final HeaderUtils headerUtils;
 
     public SecurityConfig(UserDetailsService userDetailsService,
                           BCryptPasswordEncoder bCryptPasswordEncoder,
-                          JwtUtils jwtUtils,
-                          ObjectMapper objectMapper) {
+                          JwtClaimUtils jwtClaimUtils,
+                          JwtValidator jwtValidator,
+                          ObjectMapper objectMapper,
+                          HeaderUtils headerUtils) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtUtils = jwtUtils;
+        this.jwtClaimUtils = jwtClaimUtils;
+        this.jwtValidator = jwtValidator;
         this.objectMapper = objectMapper;
+        this.headerUtils = headerUtils;
     }
 
     @Override
@@ -60,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .antMatchers(HttpMethod.OPTIONS, AUTH_REFRESH_TOKEN_ALL_URI).permitAll()
                 .anyRequest().denyAll()
                 .and()
-                .addFilterAfter(new ValidateTokenFilter(jwtUtils, objectMapper), FilterSecurityInterceptor.class)
+                .addFilterAfter(new AuthorizationFilter(jwtValidator, jwtClaimUtils, objectMapper, headerUtils), FilterSecurityInterceptor.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 

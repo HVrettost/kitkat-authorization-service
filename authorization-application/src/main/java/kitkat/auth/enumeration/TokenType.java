@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TokenType {
 
-    BEARER("Bearer");
+    ACCESS("accessToken"), REFRESH("refreshToken");
 
     private final String value;
 }

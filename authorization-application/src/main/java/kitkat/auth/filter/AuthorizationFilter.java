@@ -21,29 +21,33 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kitkat.auth.enumeration.ErrorDetails;
-import kitkat.auth.exception.error.AuthError;
+import kitkat.auth.exception.AuthorizationException;
+import kitkat.auth.jwt.util.JwtClaimUtils;
+import kitkat.auth.jwt.validator.JwtValidator;
 import kitkat.auth.util.HeaderUtils;
-import kitkat.auth.util.JwtUtils;
 
-public class ValidateTokenFilter implements Filter {
+public class AuthorizationFilter implements Filter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ValidateTokenFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationFilter.class);
 
     private static final String ACCESS_TOKEN_ENDPOINT = "/api/auth/token";
     private static final String REFRESH_TOKEN_ENDPOINT = "/api/auth/token/refresh";
 
-    private final JwtUtils jwtUtils;
+    private final JwtValidator jwtValidator;
+    private final JwtClaimUtils jwtClaimUtils;
+    private final HeaderUtils headerUtils;
     private final ObjectMapper objectMapper;
 
-    public ValidateTokenFilter(JwtUtils jwtUtils,
-                               ObjectMapper objectMapper) {
-        this.jwtUtils = jwtUtils;
+    public AuthorizationFilter(JwtValidator jwtValidator,
+                               JwtClaimUtils jwtClaimUtils,
+                               ObjectMapper objectMapper,
+                               HeaderUtils headerUtils) {
+        this.jwtValidator = jwtValidator;
+        this.jwtClaimUtils = jwtClaimUtils;
         this.objectMapper = objectMapper;
+        this.headerUtils = headerUtils;
     }
 
     @Override
@@ -51,25 +55,27 @@ public class ValidateTokenFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        if (!isAuthenticateRequest(httpRequest) && !isOptionsHttpMethod(httpRequest)) {
-            try {
-                String token = HeaderUtils.extractAuthorizationHeader(httpRequest);
-                jwtUtils.validateToken(token);
+        if (isAuthenticateRequest(httpRequest) || isOptionsHttpMethod(httpRequest)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-                if (!isUpdateAccessTokenRequest(httpRequest)) {
-                    String permissions = jwtUtils.extractPermissionsClaim(token);
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(new UsernamePasswordAuthenticationToken(null, null, getUserGrantedAuthorities(permissions)));
-                }
-            } catch (TokenExpiredException tokenExpiredException) {
-                LOGGER.error(tokenExpiredException.getMessage(), tokenExpiredException);
-                setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.TOKEN_EXPIRED);
-                return;
-            } catch (JWTVerificationException jwtVerificationException) {
-                LOGGER.error(jwtVerificationException.getMessage(), jwtVerificationException);
-                setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.INVALID_TOKEN);
+        try {
+            if (isUpdateAccessTokenRequest(httpRequest)) {
+                String refreshToken = headerUtils.extractRefreshToken(httpRequest);
+                jwtValidator.validate(refreshToken);
+                chain.doFilter(request, response);
                 return;
             }
+
+            String accessToken = headerUtils.extractAccessToken(httpRequest);
+            jwtValidator.validate(accessToken);
+            String permissions = jwtClaimUtils.extractPermissionsClaim(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(null, null, getUserGrantedAuthorities(permissions)));
+        } catch (AuthorizationException authorizationException) {
+            LOGGER.error(authorizationException.getErrorDetails().getMessage(), authorizationException);
+            setErrorDetailsAndStatusInServletResponse(httpResponse, authorizationException);
+            return;
         }
 
         chain.doFilter(request, response);
@@ -96,9 +102,9 @@ public class ValidateTokenFilter implements Filter {
                     .collect(Collectors.toList());
     }
 
-    private void setErrorDetailsAndStatusInServletResponse(HttpServletResponse httpResponse, AuthError authError) throws IOException {
-        ErrorDetails errorDetails = new ErrorDetails(authError.getErrorCode(), authError.getMessage());
-        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        httpResponse.getOutputStream().write(objectMapper.writeValueAsBytes(errorDetails));
+    private void setErrorDetailsAndStatusInServletResponse(HttpServletResponse httpResponse,
+                                                           AuthorizationException authorizationException) throws IOException {
+        httpResponse.setStatus(authorizationException.getHttpStatus().value());
+        httpResponse.getOutputStream().write(objectMapper.writeValueAsBytes(authorizationException.getErrorDetails()));
     }
 }

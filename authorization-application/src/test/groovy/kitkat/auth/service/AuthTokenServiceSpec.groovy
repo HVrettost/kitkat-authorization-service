@@ -4,13 +4,10 @@ import spock.lang.Specification
 
 import kitkat.auth.dao.RefreshTokenWhitelistDao
 import kitkat.auth.util.CookieUtils
-import kitkat.auth.util.JwtUtils
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 class AuthTokenServiceSpec extends Specification {
-
+/*
     RefreshTokenWhitelistDao refreshTokenWhitelistDao
     JwtUtils jwtUtils
     AuthRoleService authRoleService

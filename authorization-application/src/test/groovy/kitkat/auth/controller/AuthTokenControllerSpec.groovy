@@ -27,10 +27,10 @@ class AuthTokenControllerSpec extends Specification {
             AuthenticationRequestDto authRequestDto = Mock()
 
         when:
-            authTokenController.authenticate(request, response, authRequestDto)
+            authTokenController.authenticate(request, authRequestDto)
 
         then:
-            1 * authenticationService.authenticate(request, response, authRequestDto)
+            1 * authenticationService.authenticate(authRequestDto)
             1 * response.setStatus(HttpServletResponse.SC_NO_CONTENT)
             0 * _
     }
@@ -41,7 +41,7 @@ class AuthTokenControllerSpec extends Specification {
             HttpServletResponse response = Mock()
 
         when:
-            authTokenController.invalidateRefreshToken(request, response)
+            authTokenController.invalidateRefreshToken(request)
 
         then:
             1 * authTokenService.invalidateRefreshToken(request)
@@ -55,10 +55,10 @@ class AuthTokenControllerSpec extends Specification {
             HttpServletResponse response = Mock()
 
         when:
-            authTokenController.updateAccessToken(request, response)
+            authTokenController.updateAccessToken(request)
 
         then:
-            1 * authTokenService.updateAccessToken(request, response)
+            1 * authTokenService.updateCookieHeaderForAccessToken(request)
             1 * response.setStatus(HttpServletResponse.SC_NO_CONTENT)
             0 * _
     }
@@ -69,7 +69,7 @@ class AuthTokenControllerSpec extends Specification {
             HttpServletResponse response = Mock()
 
         when:
-            authTokenController.invalidateRefreshTokensByUsername(request, response)
+            authTokenController.invalidateRefreshTokensByUsername(request)
 
         then:
             1 * authTokenService.invalidateRefreshTokensByUsername(request)

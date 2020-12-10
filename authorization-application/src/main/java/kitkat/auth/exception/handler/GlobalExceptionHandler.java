@@ -2,7 +2,6 @@ package kitkat.auth.exception.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,15 +18,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler({ AuthorizationException.class })
-    public ResponseEntity<Object> handleAuthorizationException(AuthorizationException authorizationException) {
+    public ResponseEntity<ErrorDetails> handleAuthorizationException(AuthorizationException authorizationException) {
         LOGGER.error(authorizationException.getDescription(), authorizationException);
-        return new ResponseEntity<>(authorizationException.getErrorDetails(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(authorizationException.getErrorDetails(), authorizationException.getHttpStatus());
     }
 
     @ExceptionHandler(value = { BadCredentialsException.class })
-    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException badCredentialsException) {
+    public ResponseEntity<ErrorDetails> handleBadCredentialsException(BadCredentialsException badCredentialsException) {
         AuthError authError = AuthError.BAD_CREDENTIALS;
         LOGGER.error(authError.getDescription(), badCredentialsException);
-        return new ResponseEntity<>(new ErrorDetails(authError.getErrorCode(), authError.getMessage()), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ErrorDetails(authError.getErrorCode(), authError.getMessage()), authError.getHttpStatus());
     }
 }

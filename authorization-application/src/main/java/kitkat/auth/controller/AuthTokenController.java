@@ -3,6 +3,8 @@ package kitkat.auth.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,31 +26,29 @@ public class AuthTokenController implements AuthTokenApi {
     }
 
     @Override
-    public void authenticate(HttpServletRequest httpServletRequest,
-                             HttpServletResponse httpServletResponse,
-                             AuthenticationRequestDto authenticationRequest) {
-        authenticationService.authenticate(httpServletRequest, httpServletResponse, authenticationRequest);
-        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    public ResponseEntity<Void> generateAccessToken(HttpServletRequest httpServletRequest,
+                                                    AuthenticationRequestDto authenticationRequest) {
+        authenticationService.authenticate(authenticationRequest);
+        HttpHeaders httpHeaders = authTokenService.createCookieHeadersForAuthorization(httpServletRequest, authenticationRequest.getUsername());
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public void invalidateRefreshToken(HttpServletRequest httpServletRequest,
-                                       HttpServletResponse httpServletResponse) {
+    public ResponseEntity<Void> invalidateRefreshToken(HttpServletRequest httpServletRequest) {
         authTokenService.invalidateRefreshToken(httpServletRequest);
-        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public void updateAccessToken(HttpServletRequest httpServletRequest,
-                                  HttpServletResponse httpServletResponse) {
-        authTokenService.updateAccessToken(httpServletRequest, httpServletResponse);
-        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    public ResponseEntity<Void> updateAccessToken(HttpServletRequest httpServletRequest) {
+        HttpHeaders httpHeaders = authTokenService.updateCookieHeaderForAccessToken(httpServletRequest);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public void invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest,
-                                                  HttpServletResponse httpServletResponse) {
+    public ResponseEntity<Void> invalidateRefreshTokensByUsername(HttpServletRequest httpServletRequest) {
         authTokenService.invalidateRefreshTokensByUsername(httpServletRequest);
-        httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
