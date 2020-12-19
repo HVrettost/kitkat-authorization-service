@@ -1,9 +1,9 @@
 package kitkat.auth.util;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import kitkat.auth.config.properties.CookieConfigProperties;
-import org.springframework.util.StringUtils;
 
 @Component
 public class CookieUtils {
@@ -46,7 +46,7 @@ public class CookieUtils {
     }
 
     private String httpOnlyFlag() {
-        return Boolean.getBoolean(cookieConfigProperties.getHttpOnly())
+        return Boolean.parseBoolean(cookieConfigProperties.getHttpOnly())
                 ? "HttpOnly; "
                 : "";
     }
@@ -58,7 +58,7 @@ public class CookieUtils {
     }
 
     private String secureFlag() {
-        return Boolean.getBoolean(cookieConfigProperties.getSecure())
+        return Boolean.parseBoolean(cookieConfigProperties.getSecure())
                 ? "Secure; "
                 : "";
     }

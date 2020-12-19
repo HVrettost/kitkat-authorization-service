@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ConfigurationProperties(prefix = "kitkat.auth.cookie")
-@PropertySource("classpath:cookie.properties")
+@PropertySource("classpath:${spring.profiles.active}/cookie-${spring.profiles.active}.properties")
 @Getter
 @Setter
 public class CookieConfigProperties {
