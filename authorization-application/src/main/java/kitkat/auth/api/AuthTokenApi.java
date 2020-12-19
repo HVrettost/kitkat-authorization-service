@@ -22,15 +22,15 @@ public interface AuthTokenApi {
     ResponseEntity<Void> generateAccessToken(HttpServletRequest httpServletRequest,
                                              @RequestBody AuthenticationRequestDto authenticationRequest) throws CoreException;
 
-    @PreAuthorize("hasAuthority('REFRESH_TOKEN_DELETE')")
-    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-                   produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Void> invalidateRefreshToken(HttpServletRequest httpServletRequest) throws CoreException;
-
     @PutMapping(value = "/refresh",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Void> updateAccessToken(HttpServletRequest httpServletRequest) throws CoreException;
+
+    @PreAuthorize("hasAuthority('REFRESH_TOKEN_DELETE')")
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+                   produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Void> invalidateRefreshToken(HttpServletRequest httpServletRequest) throws CoreException;
 
     @PreAuthorize("hasAuthority('REFRESH_TOKEN_ALL_DELETE')")
     @DeleteMapping(value = "/all",

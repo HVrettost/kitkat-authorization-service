@@ -13,9 +13,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kitkat.auth.enumeration.ErrorDetails;
+import kitkat.auth.exception.error.AuthError;
 import kitkat.auth.exception.AuthorizationException;
 import kitkat.auth.jwt.util.JwtClaimUtils;
 import kitkat.auth.jwt.validator.JwtValidator;
@@ -55,7 +59,9 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        if (isAuthenticateRequest(httpRequest) || isOptionsHttpMethod(httpRequest)) {
+        if (!httpRequest.getRequestURI().startsWith("/api")
+                || isAuthenticateRequest(httpRequest)
+                || isOptionsHttpMethod(httpRequest)) {
             chain.doFilter(request, response);
             return;
         }
@@ -71,10 +77,21 @@ public class AuthorizationFilter implements Filter {
             String accessToken = headerUtils.extractAccessToken(httpRequest);
             jwtValidator.validate(accessToken);
             String permissions = jwtClaimUtils.extractPermissionsClaim(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(null, null, getUserGrantedAuthorities(permissions)));
+            SecurityContextHolder.getContext()
+                    .setAuthentication(new UsernamePasswordAuthenticationToken(null, null, getUserGrantedAuthorities(permissions)));
         } catch (AuthorizationException authorizationException) {
             LOGGER.error(authorizationException.getErrorDetails().getMessage(), authorizationException);
-            setErrorDetailsAndStatusInServletResponse(httpResponse, authorizationException);
+            setErrorDetailsAndStatusInServletResponse(httpResponse, authorizationException.getHttpStatus(), authorizationException.getErrorDetails());
+            return;
+        } catch (JWTVerificationException jwtVerificationException) {
+            LOGGER.error("Error verifying JWT token", jwtVerificationException);
+            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.INVALID_TOKEN.getHttpStatus(),
+                    new ErrorDetails(AuthError.INVALID_TOKEN.getErrorCode(), AuthError.INVALID_TOKEN.getMessage()));
+            return;
+        } catch (IllegalArgumentException illArgEx) {
+            LOGGER.error(illArgEx.getMessage(), illArgEx);
+            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.GRANTED_AUTHORITIES_NOT_FOUND.getHttpStatus(),
+                    new ErrorDetails(AuthError.GRANTED_AUTHORITIES_NOT_FOUND.getErrorCode(), AuthError.GRANTED_AUTHORITIES_NOT_FOUND.getMessage()));
             return;
         }
 
@@ -103,8 +120,9 @@ public class AuthorizationFilter implements Filter {
     }
 
     private void setErrorDetailsAndStatusInServletResponse(HttpServletResponse httpResponse,
-                                                           AuthorizationException authorizationException) throws IOException {
-        httpResponse.setStatus(authorizationException.getHttpStatus().value());
-        httpResponse.getOutputStream().write(objectMapper.writeValueAsBytes(authorizationException.getErrorDetails()));
+                                                           HttpStatus httpStatus,
+                                                           ErrorDetails errorDetails) throws IOException {
+        httpResponse.setStatus(httpStatus.value());
+        httpResponse.getOutputStream().write(objectMapper.writeValueAsBytes(errorDetails));
     }
 }

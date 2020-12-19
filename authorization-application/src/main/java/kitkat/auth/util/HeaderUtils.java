@@ -1,11 +1,10 @@
 package kitkat.auth.util;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.assertj.core.util.Lists;
+import kitkat.auth.validator.TokenCookieValidator;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +15,19 @@ import kitkat.auth.exception.error.AuthError;
 @Component
 public class HeaderUtils {
 
+    private final TokenCookieValidator tokenCookieValidator;
+
+    public HeaderUtils(TokenCookieValidator tokenCookieValidator) {
+        this.tokenCookieValidator = tokenCookieValidator;
+    }
+
     public String extractUserAgent(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(HttpHeaders.USER_AGENT))
-                .orElseThrow(() -> new AuthorizationException(AuthError.USER_AGENT_NOT_FOUND));
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+        if (userAgent == null || "".equals(userAgent)) {
+            throw new AuthorizationException(AuthError.USER_AGENT_NOT_FOUND);
+        }
+
+        return userAgent;
     }
 
     public String extractAccessToken(HttpServletRequest request) {
@@ -30,8 +39,8 @@ public class HeaderUtils {
     }
 
     private String extractToken(HttpServletRequest request, String tokenType) {
-        String cookie = Optional.ofNullable(request.getHeader(HttpHeaders.COOKIE))
-                .orElseThrow(() -> new AuthorizationException(AuthError.TOKEN_COULD_NOT_BE_EXTRACTED));
+        String cookie = request.getHeader(HttpHeaders.COOKIE);
+        tokenCookieValidator.validate(cookie);
 
         String token = Arrays.stream(cookie.split("; "))
                              .filter(cookiePart -> cookiePart.contains(tokenType))

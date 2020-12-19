@@ -3,14 +3,16 @@ package kitkat.auth.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
-import kitkat.auth.jwt.helper.JwtGenerator;
-import kitkat.auth.jwt.util.JwtClaimUtils;
+import kitkat.auth.dao.AuthRoleToPermissionsDao;
+import kitkat.auth.dao.AuthRoleToUsernameDao;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import kitkat.auth.dao.RefreshTokenWhitelistDao;
 import kitkat.auth.exception.AuthorizationException;
 import kitkat.auth.exception.error.AuthError;
+import kitkat.auth.jwt.helper.JwtGenerator;
+import kitkat.auth.jwt.util.JwtClaimUtils;
 import kitkat.auth.util.CookieUtils;
 import kitkat.auth.util.HeaderUtils;
 
@@ -20,20 +22,23 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     private final RefreshTokenWhitelistDao refreshTokenWhitelistDao;
     private final JwtClaimUtils jwtClaimUtils;
     private final JwtGenerator jwtGenerator;
-    private final AuthRoleService authRoleService;
+    private final AuthRoleToUsernameDao authRoleToUsernameDao;
+    private final AuthRoleToPermissionsDao authRoleToPermissionsDao;
     private final CookieUtils cookieUtils;
     private final HeaderUtils headerUtils;
 
     public AuthTokenServiceImpl(RefreshTokenWhitelistDao refreshTokenWhitelistDao,
                                 JwtClaimUtils jwtClaimUtils,
                                 JwtGenerator jwtGenerator,
-                                AuthRoleService authRoleService,
+                                AuthRoleToUsernameDao authRoleToUsernameDao,
+                                AuthRoleToPermissionsDao authRoleToPermissionsDao,
                                 CookieUtils cookieUtils,
                                 HeaderUtils headerUtils) {
         this.refreshTokenWhitelistDao = refreshTokenWhitelistDao;
         this.jwtClaimUtils = jwtClaimUtils;
         this.jwtGenerator = jwtGenerator;
-        this.authRoleService = authRoleService;
+        this.authRoleToUsernameDao = authRoleToUsernameDao;
+        this.authRoleToPermissionsDao = authRoleToPermissionsDao;
         this.cookieUtils = cookieUtils;
         this.headerUtils = headerUtils;
     }
@@ -41,8 +46,6 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     @Override
     @Transactional
     public HttpHeaders createCookieHeadersForAuthorization(HttpServletRequest httpServletRequest, String username) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-
         String userAgent = headerUtils.extractUserAgent(httpServletRequest);
         String permissions = getUserPermissions(username);
         String accessToken = jwtGenerator.generateAccessToken(username, permissions);
@@ -50,6 +53,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
         invalidateRefreshTokenIfExistsAndSaveNew(refreshToken, username, userAgent);
 
+        HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtils.createAccessTokenCookie(accessToken));
         httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtils.createRefreshTokenCookie(refreshToken));
 
@@ -66,20 +70,21 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
     @Override
     public HttpHeaders updateCookieHeaderForAccessToken(HttpServletRequest httpServletRequest) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-
         String refreshToken = headerUtils.extractRefreshToken(httpServletRequest);
         String username = jwtClaimUtils.extractSubjectClaim(refreshToken);
         String permissions = getUserPermissions(username);
         String accessToken = jwtGenerator.generateAccessToken(username, permissions);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtils.createRefreshTokenCookie(refreshToken));
         httpHeaders.add(HttpHeaders.SET_COOKIE, cookieUtils.createAccessTokenCookie(accessToken));
 
         return httpHeaders;
     }
 
     private String getUserPermissions(String username) {
-        String authRole = authRoleService.getAuthRoleByUsername(username).getRole();
-        return authRoleService.getPermissionsByAuthRole(authRole).getAuthorities();
+        String authRole = authRoleToUsernameDao.getAuthRoleByUsername(username).getRole();
+        return authRoleToPermissionsDao.getPermissionsByAuthRole(authRole).getAuthorities();
     }
 
 

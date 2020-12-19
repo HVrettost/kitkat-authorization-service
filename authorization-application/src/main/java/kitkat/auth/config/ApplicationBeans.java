@@ -16,7 +16,7 @@ import java.util.List;
 public class ApplicationBeans {
 
     @Bean
-    public Clock clock() {
+    public Clock utcClock() {
         return Clock.systemUTC();
     }
 

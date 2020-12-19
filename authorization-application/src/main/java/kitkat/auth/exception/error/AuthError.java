@@ -16,7 +16,8 @@ public enum AuthError {
     PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND(6000, "Permissions not found for given role", "Permissions for given role could not be retrieved from database", HttpStatus.FORBIDDEN),
     AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND(7000, "Role not found for given username", "Role for given username could not be retrieved from database", HttpStatus.FORBIDDEN),
     USER_AGENT_NOT_FOUND(8000, "Could not find user agent", "Could not extract user agent from User-Agent header", HttpStatus.FORBIDDEN),
-    TOKEN_COULD_NOT_BE_EXTRACTED(9000, "Token could not be extracted from Cookie header", "Access Token or Refresh Token could not be extracted from Cookie header", HttpStatus.FORBIDDEN);
+    TOKEN_COULD_NOT_BE_EXTRACTED(9000, "Token could not be extracted from Cookie header", "Access Token or Refresh Token could not be extracted from Cookie header", HttpStatus.FORBIDDEN),
+    GRANTED_AUTHORITIES_NOT_FOUND(10000, "Could not find granted authorities for user", "One or more granted authorities were not found for user", HttpStatus.FORBIDDEN);
 
 
     private final int errorCode;
