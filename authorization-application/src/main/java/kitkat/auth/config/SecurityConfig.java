@@ -1,5 +1,6 @@
 package kitkat.auth.config;
 
+import kitkat.auth.config.properties.SecurityConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -39,19 +40,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     private final JwtValidator jwtValidator;
     private final ObjectMapper objectMapper;
     private final HeaderUtils headerUtils;
+    private final SecurityConfigProperties securityConfigProperties;
 
     public SecurityConfig(UserDetailsService userDetailsService,
                           BCryptPasswordEncoder bCryptPasswordEncoder,
                           JwtClaimUtils jwtClaimUtils,
                           JwtValidator jwtValidator,
                           ObjectMapper objectMapper,
-                          HeaderUtils headerUtils) {
+                          HeaderUtils headerUtils,
+                          SecurityConfigProperties securityConfigProperties) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtClaimUtils = jwtClaimUtils;
         this.jwtValidator = jwtValidator;
         this.objectMapper = objectMapper;
         this.headerUtils = headerUtils;
+        this.securityConfigProperties = securityConfigProperties;
     }
 
     @Override
@@ -73,10 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/auth/token/**")
-                .allowedOrigins("https://localhost:8529")
-                .allowedMethods(HttpMethod.POST.name(), HttpMethod.DELETE.name(), HttpMethod.PUT.name(), HttpMethod.OPTIONS.name())
-                .exposedHeaders(HttpHeaders.SET_COOKIE)
+        registry.addMapping(securityConfigProperties.getMapping())
+                .allowedOrigins(securityConfigProperties.getAllowedOrigins().toArray(String[]::new))
+                .allowedMethods(securityConfigProperties.getAllowedMethods().toArray(String[]::new))
+                .exposedHeaders(securityConfigProperties.getAllowedMethods().toArray(String[]::new))
                 .allowCredentials(true);
     }
 
