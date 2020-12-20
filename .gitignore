@@ -2,3 +2,5 @@
 .idea
 build
 authorization-application/src/main/resources/keystore
+.gitattributes
+.DS_Store
