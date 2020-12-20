@@ -2,6 +2,7 @@ package kitkat.auth.gateway;
 
 import java.util.Map;
 
+import kitkat.auth.config.properties.UserServiceConfigProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,12 +16,14 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceGatewayImpl.class);
 
-    private static final String USER_SERVICE_BASE_URL = "http://localhost:8905";
     private static final String USER_URI = "/api/user";
 
+    private final UserServiceConfigProperties userServiceConfigProperties;
     private final RestTemplate restTemplate;
 
-    public UserServiceGatewayImpl(RestTemplate restTemplate) {
+    public UserServiceGatewayImpl(UserServiceConfigProperties userServiceConfigProperties,
+                                  RestTemplate restTemplate) {
+        this.userServiceConfigProperties = userServiceConfigProperties;
         this.restTemplate = restTemplate;
     }
 
@@ -35,7 +38,7 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     private String constructUri(String resourcePath, Map<String, String> queryParameters) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(USER_SERVICE_BASE_URL + resourcePath);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(userServiceConfigProperties.getHost() + resourcePath);
         queryParameters.forEach(builder::queryParam);
 
         return builder.build().toString();

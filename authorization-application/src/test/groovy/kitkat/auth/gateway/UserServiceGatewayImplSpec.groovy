@@ -1,5 +1,6 @@
 package kitkat.auth.gateway
 
+import kitkat.auth.config.properties.UserServiceConfigProperties
 import kitkat.auth.model.dto.UserDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,11 +14,13 @@ class UserServiceGatewayImplSpec extends Specification {
     static final String HOST = "http://localhost:8905"
 
     RestTemplate restTemplate
+    UserServiceConfigProperties userServiceConfigProperties
     UserServiceGateway userServiceGateway
 
     def setup() {
         restTemplate = Mock()
-        userServiceGateway =new UserServiceGatewayImpl(restTemplate)
+        userServiceConfigProperties = Mock()
+        userServiceGateway =new UserServiceGatewayImpl(userServiceConfigProperties, restTemplate)
     }
 
     def "should make call to user service to get user by username successfully"() {
@@ -30,6 +33,7 @@ class UserServiceGatewayImplSpec extends Specification {
             def response = userServiceGateway.getUserByUsername(username)
 
         then:
+            1 * userServiceConfigProperties.host >> HOST
             1 * restTemplate.getForEntity(HOST + USER_URI + "?username=" + username, UserDto) >> userEntity
             0 * _
 
@@ -49,6 +53,7 @@ class UserServiceGatewayImplSpec extends Specification {
             def response = userServiceGateway.getUserByUsername(username)
 
         then:
+            1 * userServiceConfigProperties.host >> HOST
             1 * restTemplate.getForEntity(HOST + USER_URI + "?username=" + username, UserDto) >> { throw new ResponseStatusException() }
             0 * _
 
