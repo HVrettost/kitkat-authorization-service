@@ -61,7 +61,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     }
 
     private void invalidateRefreshTokenIfExistsAndSaveNew(String refreshToken, String username, String userAgent) {
-        if (refreshTokenWhitelistDao.countTokensByUsernameAndUserAgent(username, userAgent) > 0) {
+        if (refreshTokenWhitelistDao.isRefreshTokenExistsByUsernameAndUserAgent(username, userAgent)) {
             refreshTokenWhitelistDao.invalidateRefreshToken(username, userAgent);
         }
 

@@ -70,8 +70,54 @@ class AuthTokenServiceImplSpec extends Specification {
             1 * jwtGenerator.generateRefreshToken(username) >> refreshToken
 
         and: 'invalidate existing refresh token and create new'
-            1 * refreshTokenWhitelistDao.countTokensByUsernameAndUserAgent(username, userAgent) >> 1
+            1 * refreshTokenWhitelistDao.isRefreshTokenExistsByUsernameAndUserAgent(username, userAgent) >> true
             1 * refreshTokenWhitelistDao.invalidateRefreshToken(username, userAgent)
+            1 * refreshTokenWhitelistDao.saveRefreshToken(refreshToken, username, userAgent)
+
+        and: 'cookies are created to be passed in the http headers'
+            1 * cookieUtils.createAccessTokenCookie(accessToken) >> accessTokenCookie
+            1 * cookieUtils.createRefreshTokenCookie(refreshToken) >> refreshTokenCookie
+            0 * _
+
+        and:
+            with(response['Set-Cookie']) {
+                contains(accessTokenCookie)
+                contains(refreshTokenCookie)
+            }
+    }
+
+    def "Should generate access token and refresh token and put them in cookie without invalidating existing tokens"() {
+        given:
+            def userAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+            def permissions = "PERMISSION1 PERMISSION2 PERMISSION3"
+            def refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            def accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYXV0aHMiOiJQRVJNSVNTSU9OMSBQRVJNSVNTSU9OMiIsImlhdCI6MTUxNjIzOTAyMn0.cboyQI7SmetOrcqmdhxT69PdqcSmBDmWGuMft0b2Lrg"
+            def username = "username"
+            def authRole = "ROLE"
+            def accessTokenCookie = "Access Token Cookie"
+            def refreshTokenCookie = "Refresh Token Cookie"
+            AuthRoleToAuthoritiesDto authRoleToAuthoritiesDto = Mock()
+            AuthRoleToUsernameDto authRoleToUsernameDto = Mock()
+            HttpServletRequest httpServletRequest = Mock()
+
+        when:
+            def response = authTokenService.createCookieHeadersForAuthorization(httpServletRequest, username)
+
+        then: 'user agent is extracted from the http request'
+            1 * headerUtils.extractUserAgent(httpServletRequest) >> userAgent
+
+        and: 'permissions are retrieved for the user'
+            1 * authRoleToUsernameDao.getAuthRoleByUsername(username) >> authRoleToUsernameDto
+            1 * authRoleToUsernameDto.role >> authRole
+            1 * authRoleToPermissionsDao.getPermissionsByAuthRole(authRole) >> authRoleToAuthoritiesDto
+            1 * authRoleToAuthoritiesDto.authorities >> permissions
+
+        and: 'access token and refresh token are generated'
+            1 * jwtGenerator.generateAccessToken(username, permissions) >> accessToken
+            1 * jwtGenerator.generateRefreshToken(username) >> refreshToken
+
+        and: 'create new token in database'
+            1 * refreshTokenWhitelistDao.isRefreshTokenExistsByUsernameAndUserAgent(username, userAgent) >> false
             1 * refreshTokenWhitelistDao.saveRefreshToken(refreshToken, username, userAgent)
 
         and: 'cookies are created to be passed in the http headers'

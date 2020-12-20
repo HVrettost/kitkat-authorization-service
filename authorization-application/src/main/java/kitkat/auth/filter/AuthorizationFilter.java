@@ -1,7 +1,6 @@
 package kitkat.auth.filter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +30,7 @@ import kitkat.auth.exception.AuthorizationException;
 import kitkat.auth.jwt.util.JwtClaimUtils;
 import kitkat.auth.jwt.validator.JwtValidator;
 import kitkat.auth.util.HeaderUtils;
+import org.springframework.util.StringUtils;
 
 public class AuthorizationFilter implements Filter {
 
@@ -88,11 +88,6 @@ public class AuthorizationFilter implements Filter {
             setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.INVALID_TOKEN.getHttpStatus(),
                     new ErrorDetails(AuthError.INVALID_TOKEN.getErrorCode(), AuthError.INVALID_TOKEN.getMessage()));
             return;
-        } catch (IllegalArgumentException illArgEx) {
-            LOGGER.error(illArgEx.getMessage(), illArgEx);
-            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.GRANTED_AUTHORITIES_NOT_FOUND.getHttpStatus(),
-                    new ErrorDetails(AuthError.GRANTED_AUTHORITIES_NOT_FOUND.getErrorCode(), AuthError.GRANTED_AUTHORITIES_NOT_FOUND.getMessage()));
-            return;
         }
 
         chain.doFilter(request, response);
@@ -111,9 +106,11 @@ public class AuthorizationFilter implements Filter {
     }
 
     private List<GrantedAuthority> getUserGrantedAuthorities(String authorities) {
-        return authorities == null
-                ? Collections.emptyList()
-                : List.of(authorities.split(" "))
+        if (StringUtils.isEmpty(authorities)) {
+            throw new AuthorizationException(AuthError.GRANTED_AUTHORITIES_NOT_FOUND);
+        }
+
+        return List.of(authorities.split(" "))
                     .stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());

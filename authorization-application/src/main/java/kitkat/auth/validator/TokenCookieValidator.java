@@ -8,13 +8,14 @@ import kitkat.auth.enumeration.TokenType;
 import kitkat.auth.exception.AuthorizationException;
 import kitkat.auth.exception.error.AuthError;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 public class TokenCookieValidator implements Validator<String> {
 
     @Override
     public void validate(String cookie) {
-        if (cookie == null || "".equals(cookie)) {
+        if (StringUtils.isEmpty(cookie)) {
             throw new AuthorizationException(AuthError.TOKEN_COULD_NOT_BE_EXTRACTED);
         }
 

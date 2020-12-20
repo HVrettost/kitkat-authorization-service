@@ -45,7 +45,8 @@ public class HeaderUtils {
         String token = Arrays.stream(cookie.split("; "))
                              .filter(cookiePart -> cookiePart.contains(tokenType))
                              .findFirst()
-                             .orElseThrow(() -> new AuthorizationException(AuthError.TOKEN_COULD_NOT_BE_EXTRACTED));
+                             .get();
+
 
         return token.replace(tokenType + "=", "");
     }

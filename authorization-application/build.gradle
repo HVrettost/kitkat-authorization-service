@@ -25,4 +25,12 @@ bootRun {
 
 pitest {
     reportDir file(project.buildDir.path + '/pitestReports')
+    excludedClasses = ['kitkat.auth.app.*',
+                       'kitkat.auth.config.*',
+                       'kitkat.auth.enumeration.*',
+                       'kitkat.auth.exception.error.*',
+                       'kitkat.auth.exception.AuthorizationException',
+                       'kitkat.auth.exception.CoreException',
+                       'kitkat.auth.model.dto.*',
+                       'kitkat.auth.model.entity.*']
 }

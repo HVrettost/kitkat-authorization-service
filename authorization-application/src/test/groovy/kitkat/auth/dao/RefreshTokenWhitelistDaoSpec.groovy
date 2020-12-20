@@ -5,6 +5,7 @@ import spock.lang.Specification
 import kitkat.auth.mapper.RefreshTokenWhitelistMapper
 import kitkat.auth.model.entity.RefreshTokenWhitelist
 import kitkat.auth.repository.AuthTokenRepository
+import spock.lang.Unroll
 
 class RefreshTokenWhitelistDaoSpec extends Specification {
 
@@ -75,6 +76,7 @@ class RefreshTokenWhitelistDaoSpec extends Specification {
             0 * _
     }
 
+    @Unroll
     def "Check if user has any refresh tokens in database"() {
         given:
             def username = "username"
@@ -83,13 +85,17 @@ class RefreshTokenWhitelistDaoSpec extends Specification {
             def response = refreshTokenWhitelistDao.isRefreshTokenExistsByUsername(username)
 
         then:
-            1 * authTokenRepository.existsByUsername(username) >> true
+            1 * authTokenRepository.existsByUsername(username) >> existence
             0 * _
 
         and:
-            response
+            response == existence
+
+        where:
+            existence << [true, false]
     }
 
+    @Unroll
     def "Check if user has any refresh tokens in database given a user agent"() {
         given:
             def username = "username"
@@ -99,10 +105,13 @@ class RefreshTokenWhitelistDaoSpec extends Specification {
             def response = refreshTokenWhitelistDao.isRefreshTokenExistsByUsernameAndUserAgent(username, userAgent)
 
         then:
-            1 * authTokenRepository.existsByUsernameAndUserAgent(username, userAgent) >> true
+            1 * authTokenRepository.existsByUsernameAndUserAgent(username, userAgent) >> existence
             0 * _
 
         and:
-            response
+            response == existence
+
+        where:
+            existence << [true, false]
     }
 }

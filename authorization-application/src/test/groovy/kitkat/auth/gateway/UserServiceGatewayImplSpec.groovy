@@ -1,11 +1,13 @@
 package kitkat.auth.gateway
 
-import kitkat.auth.config.properties.UserServiceConfigProperties
-import kitkat.auth.model.dto.UserDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.server.ResponseStatusException
+
+import kitkat.auth.config.properties.UserServiceConfigProperties
+import kitkat.auth.model.dto.UserDto
+
 import spock.lang.Specification
 
 class UserServiceGatewayImplSpec extends Specification {

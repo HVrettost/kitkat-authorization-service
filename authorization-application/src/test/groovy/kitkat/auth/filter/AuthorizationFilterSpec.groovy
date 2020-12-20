@@ -136,7 +136,8 @@ class AuthorizationFilterSpec extends Specification {
             HttpMethod.PUT    | 2
     }
 
-    def "Should set response with error details if IllegalArgumentException is thrown because of empty granted authiorities list"() {
+    @Unroll
+    def "Should set response with error details if AuthorizationException is thrown because permissions do not exist"() {
         given:
             def errorDetailsAsByteArray = "stringArray".bytes
             ServletOutputStream servletOutputStream = Mock()
@@ -154,17 +155,20 @@ class AuthorizationFilterSpec extends Specification {
 
         and: 'validate access token successfully'
             1 * jwtValidator.validate(accessToken)
-            1 * jwtClaimUtils.extractPermissionsClaim(accessToken) >> ''
+            1 * jwtClaimUtils.extractPermissionsClaim(accessToken) >> permissions
 
-        and: 'IllegalArgumentException is handled and http response is set'
+        and: 'Authorization exception is handled and http response is set'
             1 * servletResponse.setStatus(HttpStatus.FORBIDDEN.value())
             1 * objectMapper.writeValueAsBytes(_ as ErrorDetails) >> errorDetailsAsByteArray
             1 * servletResponse.getOutputStream() >> servletOutputStream
             1 * servletOutputStream.write(errorDetailsAsByteArray)
             0 * _
+
+        where:
+            permissions << [null, '']
     }
 
-    def "Should set response with error details if AuthorizationException is thrown"() {
+    def "Should set response with error details if AuthorizationException is thrown because extract of token is unsuccessful"() {
         given:
             def errorDetailsAsByteArray = "stringArray".bytes
             ServletOutputStream servletOutputStream = Mock()
