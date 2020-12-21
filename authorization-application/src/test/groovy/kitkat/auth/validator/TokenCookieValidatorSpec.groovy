@@ -31,21 +31,6 @@ class TokenCookieValidatorSpec extends Specification implements CookieHelper{
             cookie << [null, ""]
     }
 
-    def "Should throw AuthorizationException if cookie is not consisted of two parts"() {
-        given:
-            def cookie = createNonTwoPartCookie()
-
-        when:
-            tokenCookieValidator.validate(cookie)
-
-        then:
-            AuthorizationException authorizationException = thrown()
-            with(authorizationException) {
-                errorDetails.errorCode == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.errorCode
-                errorDetails.message == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.message
-            }
-    }
-
     def "Should throw AuthorizationException if cookie parts do not contain accessToken"() {
         given:
             def cookie = createCookieThatDoesNotContainAccessTokenPart()

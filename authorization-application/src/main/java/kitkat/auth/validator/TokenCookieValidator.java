@@ -22,15 +22,9 @@ public class TokenCookieValidator implements Validator<String> {
         List<String> cookieParts = Arrays.stream(cookie.split("; "))
                 .collect(Collectors.toList());
 
-        if (!isCookieConsistsOfTwoParts(cookieParts)
-                || !accessTokenExists(cookieParts)
-                || !refreshTokenExists(cookieParts)) {
+        if (!accessTokenExists(cookieParts) || !refreshTokenExists(cookieParts)) {
             throw new AuthorizationException(AuthError.TOKEN_COULD_NOT_BE_EXTRACTED);
         }
-    }
-
-    private boolean isCookieConsistsOfTwoParts(List<String> cookieParts) {
-        return cookieParts.size() == 2;
     }
 
     private boolean accessTokenExists(List<String> cookieParts) {
