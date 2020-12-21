@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  kitkat-autorization-service:
+    build: ./../authorization-application
+    ports:
+      - 8900:8900
+    depends_on:
+      - kitkat-authorization-database
+      - kitkat-authorization-migration
+    container_name: kitkat-authorization-service
+
+  kitkat-authorization-database:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: authorizationdb
+    ports:
+      - 5432:5432
+    container_name: kitkat-authorization-database
+
+  kitkat-authorization-migration:
+    image: flyway/flyway:7
+    environment:
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: postgres
+      FLYWAY_SCHEMAS: auth
+      FLYWAY_URL: jdbc:postgresql://kitkat-authorization-database:5432/authorizationdb
+    command: -connectRetries=60 migrate
+    depends_on:
+      - kitkat-authorization-database
+    volumes:
+      - ./migration-scripts:/flyway/sql
+    container_name: kitkat-authorization-flyway
+
+  kitkat-authorization-mocks:
+    build: ./docker-mocks
+    ports:
+      - 8905:8080
+    container_name: kitkat-authorization-wiremock

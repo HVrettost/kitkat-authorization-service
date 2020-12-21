@@ -3,38 +3,38 @@ version '1.0'
 
 
 task postgresStart(type: Exec) {
-    commandLine 'docker-compose', 'up', '-d', 'kitkat-authorization-database'
+    commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'up', '-d', 'kitkat-authorization-database'
 }
 
 task postgresStop() {
     doLast {
         exec {
-            commandLine 'docker-compose', 'kill', 'kitkat-authorization-database'
+            commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'kill', 'kitkat-authorization-database'
         }
         exec {
-            commandLine 'docker-compose', 'rm', '-v', '-f', 'kitkat-authorization-database'
+            commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'rm', '-v', '-f', 'kitkat-authorization-database'
         }
         exec {
-            commandLine 'docker-compose', 'rm', '-v', '-f', 'kitkat-authorization-migration'
+            commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'rm', '-v', '-f', 'kitkat-authorization-migration'
         }
     }
 }
 
 task migrationStart(type: Exec, dependsOn: postgresStart) {
-    commandLine 'docker-compose', 'up', 'kitkat-authorization-migration'
+    commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'up', 'kitkat-authorization-migration'
 }
 
 task wiremockStart(type: Exec) {
-    commandLine 'docker-compose', 'up', '-d', '--build', 'kitkat-authorization-mocks'
+    commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'up', '-d', '--build', 'kitkat-authorization-mocks'
 }
 
 task wiremockStop() {
     doLast {
         exec {
-            commandLine 'docker-compose', 'kill', 'kitkat-authorization-mocks'
+            commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'kill', 'kitkat-authorization-mocks'
         }
         exec {
-            commandLine 'docker-compose', 'rm', '-v', '-f', 'kitkat-authorization-mocks'
+            commandLine 'docker-compose', '-f', 'docker-compose-dev.yml', 'rm', '-v', '-f', 'kitkat-authorization-mocks'
         }
     }
 }
