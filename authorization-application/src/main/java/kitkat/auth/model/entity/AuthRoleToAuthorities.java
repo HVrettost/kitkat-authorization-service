@@ -15,7 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(schema = "AUTH", name = "AUTH_ROLE_TO_AUTHORITIES")
+@Table(name = "AUTH_ROLE_TO_AUTHORITIES")
 public class AuthRoleToAuthorities {
 
     @Id
