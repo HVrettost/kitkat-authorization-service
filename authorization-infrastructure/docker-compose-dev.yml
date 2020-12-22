@@ -24,7 +24,7 @@ services:
     environment:
       FLYWAY_USER: postgres
       FLYWAY_PASSWORD: postgres
-      FLYWAY_SCHEMAS: auth
+      FLYWAY_SCHEMAS: kitkat_auth
       FLYWAY_URL: jdbc:postgresql://kitkat-authorization-database:5432/authorizationdb
     command: -connectRetries=60 migrate
     depends_on:
