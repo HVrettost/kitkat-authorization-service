@@ -15,20 +15,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(schema = "AUTH", name = "REFRESH_TOKEN_WHITELIST")
-public class RefreshTokenWhitelist {
+@Table(schema = "AUTH", name = "AUTH_ROLE")
+public class AuthRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private UUID id;
 
-    @Column(name = "USERNAME")
-    private String username;
-
-    @Column(name = "USER_AGENT")
-    private String userAgent;
-
-    @Column(name = "REFRESH_TOKEN")
-    private String refreshToken;
+    @Column(name = "ROLE")
+    private String role;
 }
