@@ -1,8 +1,8 @@
 package kitkat.auth.gateway;
 
-import kitkat.auth.model.dto.UserDto;
+import kitkat.auth.model.dto.UserCredentialsDto;
 
 public interface UserServiceGateway {
 
-    UserDto getUserByUsername(String username);
+    UserCredentialsDto getUserCredentialsByUsername(String username);
 }

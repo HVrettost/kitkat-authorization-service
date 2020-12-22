@@ -6,13 +6,14 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.server.ResponseStatusException
 
 import kitkat.auth.config.properties.UserServiceConfigProperties
-import kitkat.auth.model.dto.UserDto
+import kitkat.auth.model.dto.UserCredentialsDto
 
 import spock.lang.Specification
 
 class UserServiceGatewayImplSpec extends Specification {
 
-    static final String USER_URI = "/api/user"
+    static final String USERS_BASE_URI = "/api/users"
+    static final String USER_URI = "/auth"
     static final String HOST = "http://localhost:8905"
 
     RestTemplate restTemplate
@@ -29,14 +30,14 @@ class UserServiceGatewayImplSpec extends Specification {
         given:
             def username = "username"
             def password = "password"
-            ResponseEntity<UserDto> userEntity = new ResponseEntity<>(new UserDto(username: username, password: password), HttpStatus.OK)
+            ResponseEntity<UserCredentialsDto> userEntity = new ResponseEntity<>(new UserCredentialsDto(username: username, password: password), HttpStatus.OK)
 
         when:
-            def response = userServiceGateway.getUserByUsername(username)
+            def response = userServiceGateway.getUserCredentialsByUsername(username)
 
         then:
             1 * userServiceConfigProperties.host >> HOST
-            1 * restTemplate.getForEntity(HOST + USER_URI + "?username=" + username, UserDto) >> userEntity
+            1 * restTemplate.getForEntity(HOST + USERS_BASE_URI + USER_URI + "?username=" + username, UserCredentialsDto) >> userEntity
             0 * _
 
         and:
@@ -52,11 +53,11 @@ class UserServiceGatewayImplSpec extends Specification {
             def username = "username"
 
         when:
-            def response = userServiceGateway.getUserByUsername(username)
+            def response = userServiceGateway.getUserCredentialsByUsername(username)
 
         then:
             1 * userServiceConfigProperties.host >> HOST
-            1 * restTemplate.getForEntity(HOST + USER_URI + "?username=" + username, UserDto) >> { throw new ResponseStatusException() }
+            1 * restTemplate.getForEntity(HOST + USERS_BASE_URI + USER_URI + "?username=" + username, UserCredentialsDto) >> { throw new ResponseStatusException() }
             0 * _
 
         and:

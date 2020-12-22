@@ -1,6 +1,5 @@
 package kitkat.auth.config;
 
-import kitkat.auth.config.properties.SecurityConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kitkat.auth.config.properties.SecurityConfigProperties;
 import kitkat.auth.filter.AuthorizationFilter;
 import kitkat.auth.jwt.util.JwtClaimUtils;
 import kitkat.auth.jwt.validator.JwtValidator;

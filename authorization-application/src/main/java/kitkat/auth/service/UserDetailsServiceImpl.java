@@ -1,7 +1,7 @@
 package kitkat.auth.service;
 
 import kitkat.auth.gateway.UserServiceGateway;
-import kitkat.auth.model.dto.UserDto;
+import kitkat.auth.model.dto.UserCredentialsDto;
 
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.User;
@@ -23,10 +23,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDto user = userServiceGateway.getUserByUsername(username);
+        UserCredentialsDto credentials = userServiceGateway.getUserCredentialsByUsername(username);
 
         try {
-            return new User(user.getUsername(), user.getPassword(), Collections.emptyList());
+            return new User(credentials.getUsername(), credentials.getPassword(), Collections.emptyList());
         } catch (IllegalArgumentException ex) {
             throw new BadCredentialsException(String.format("No user was found for username %s", username), ex);
         }

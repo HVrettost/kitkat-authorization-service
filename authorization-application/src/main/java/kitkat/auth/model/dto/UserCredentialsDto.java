@@ -1,7 +1,5 @@
 package kitkat.auth.model.dto;
 
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserCredentialsDto {
 
-    private UUID id;
     private String username;
     private String password;
 }

@@ -1,7 +1,7 @@
 package kitkat.auth.service
 
 import kitkat.auth.gateway.UserServiceGateway
-import kitkat.auth.model.dto.UserDto
+import kitkat.auth.model.dto.UserCredentialsDto
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UserDetailsService
 import spock.lang.Specification
@@ -21,13 +21,13 @@ class UserDetailsServiceImplSpec extends Specification {
         given:
             def username = "username"
             def password = 'password'
-            UserDto user = new UserDto(username: username, password: password)
+            UserCredentialsDto user = new UserCredentialsDto(username: username, password: password)
 
         when:
             def response = userDetailsService.loadUserByUsername(username)
 
         then:
-            1 * userServiceGateway.getUserByUsername(username) >> user
+            1 * userServiceGateway.getUserCredentialsByUsername(username) >> user
             0 * _
 
         and:
@@ -41,13 +41,13 @@ class UserDetailsServiceImplSpec extends Specification {
     @Unroll
     def "Should throw BadCredentials exception for empty user or empty password"() {
         given:
-            UserDto user = new UserDto(username: username, password: password)
+            UserCredentialsDto user = new UserCredentialsDto(username: username, password: password)
 
         when:
             userDetailsService.loadUserByUsername(username)
 
         then:
-            1 * userServiceGateway.getUserByUsername(username) >> user
+            1 * userServiceGateway.getUserCredentialsByUsername(username) >> user
             0 * _
 
         and:

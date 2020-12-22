@@ -9,14 +9,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import kitkat.auth.model.dto.UserDto;
+import kitkat.auth.model.dto.UserCredentialsDto;
 
 @Component
 public class UserServiceGatewayImpl implements UserServiceGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceGatewayImpl.class);
 
-    private static final String USER_URI = "/api/user";
+    private static final String USERS_BASE_URI = "/api/users";
+    private static final String USER_AUTH_URI = "/auth";
 
     private final UserServiceConfigProperties userServiceConfigProperties;
     private final RestTemplate restTemplate;
@@ -28,12 +29,13 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
     }
 
     @Override
-    public UserDto getUserByUsername(String username) {
+    public UserCredentialsDto getUserCredentialsByUsername(String username) {
         try {
-            return restTemplate.getForEntity(constructUri(USER_URI, Map.of("username", username)), UserDto.class).getBody();
+            return restTemplate.getForEntity(constructUri(USERS_BASE_URI + USER_AUTH_URI, Map.of("username", username)),
+                    UserCredentialsDto.class).getBody();
         } catch (Exception ex) {
             LOGGER.error("Error when calling user service to fetch user information for username: " + username, ex);
-            return new UserDto();
+            return new UserCredentialsDto();
         }
     }
 
