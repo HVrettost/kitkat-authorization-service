@@ -41,4 +41,16 @@ class GlobalExceptionHandlerSpec extends Specification {
                 statusCode == AuthError.BAD_CREDENTIALS.httpStatus
             }
     }
+
+    def "Should handle Generic exceptions"() {
+        when:
+            def response = globalExceptionHandler.handleGenericException(new Exception('exception'))
+
+        then:
+            with (response) {
+                body.errorCode == AuthError.GENERIC_ERROR.errorCode
+                body.message == AuthError.GENERIC_ERROR.message
+                statusCode == AuthError.GENERIC_ERROR.httpStatus
+            }
+    }
 }

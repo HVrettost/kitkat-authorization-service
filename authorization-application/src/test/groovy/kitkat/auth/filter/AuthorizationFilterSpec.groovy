@@ -219,4 +219,29 @@ class AuthorizationFilterSpec extends Specification {
         where:
             exception << [new JWTVerificationException('verification exception message'), new JWTDecodeException('jwt decode exception')]
     }
+
+    @Unroll
+    def "Should set response with error details if Exception out of business domain is thrown"() {
+        given:
+            def errorDetailsAsByteArray = "stringArray".bytes
+            ServletOutputStream servletOutputStream = Mock()
+
+        when:
+            authorizationFilter.doFilter(servletRequest, servletResponse, filterChain)
+
+        then:
+            3 * servletRequest.method >> HttpMethod.POST
+            2 * servletRequest.requestURI >> "/api/all/other/endpoints"
+
+        and: 'should extract access token'
+            1 * headerUtils.extractAccessToken(servletRequest) >>
+                    { throw new Exception('exception') }
+
+        and: 'handle generic exception'
+            1 * servletResponse.setStatus(HttpStatus.BAD_REQUEST.value())
+            1 * objectMapper.writeValueAsBytes(_ as ErrorDetails) >> errorDetailsAsByteArray
+            1 * servletResponse.getOutputStream() >> servletOutputStream
+            1 * servletOutputStream.write(errorDetailsAsByteArray)
+            0 * _
+    }
 }

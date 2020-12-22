@@ -88,6 +88,11 @@ public class AuthorizationFilter implements Filter {
             setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.INVALID_TOKEN.getHttpStatus(),
                     new ErrorDetails(AuthError.INVALID_TOKEN.getErrorCode(), AuthError.INVALID_TOKEN.getMessage()));
             return;
+        } catch (Exception exception) {
+            LOGGER.error("Generic Error", exception);
+            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.GENERIC_ERROR.getHttpStatus(),
+                    new ErrorDetails(AuthError.GENERIC_ERROR.getErrorCode(), AuthError.GENERIC_ERROR.getMessage()));
+            return;
         }
 
         chain.doFilter(request, response);

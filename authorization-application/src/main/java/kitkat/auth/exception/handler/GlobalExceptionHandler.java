@@ -29,4 +29,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.error(authError.getDescription(), badCredentialsException);
         return new ResponseEntity<>(new ErrorDetails(authError.getErrorCode(), authError.getMessage()), authError.getHttpStatus());
     }
+
+    @ExceptionHandler(value = { Exception.class })
+    public ResponseEntity<ErrorDetails> handleGenericException(Exception exception) {
+        AuthError authError = AuthError.GENERIC_ERROR;
+        LOGGER.error(authError.getDescription(), exception);
+        return new ResponseEntity<>(new ErrorDetails(authError.getErrorCode(), authError.getMessage()), authError.getHttpStatus());
+    }
 }

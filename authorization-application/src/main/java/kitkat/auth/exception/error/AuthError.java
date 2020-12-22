@@ -17,7 +17,8 @@ public enum AuthError {
     AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND(1006, "Role not found for given username", "Role for given username could not be retrieved from database", HttpStatus.FORBIDDEN),
     USER_AGENT_NOT_FOUND(1007, "Could not find user agent", "Could not extract user agent from User-Agent header", HttpStatus.FORBIDDEN),
     TOKEN_COULD_NOT_BE_EXTRACTED(1008, "Token could not be extracted from Cookie header", "Access Token or Refresh Token could not be extracted from Cookie header", HttpStatus.FORBIDDEN),
-    GRANTED_AUTHORITIES_NOT_FOUND(1009, "Could not find granted authorities for user", "One or more granted authorities were not found for user", HttpStatus.FORBIDDEN);
+    GRANTED_AUTHORITIES_NOT_FOUND(1009, "Could not find granted authorities for user", "One or more granted authorities were not found for user", HttpStatus.FORBIDDEN),
+    GENERIC_ERROR(1010, "Auth Generic Error", "Auth Generic Error", HttpStatus.BAD_REQUEST);
 
 
     private final int errorCode;
