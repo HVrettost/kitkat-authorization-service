@@ -13,7 +13,7 @@ import spock.lang.Specification
 class UserServiceGatewayImplSpec extends Specification {
 
     static final String USERS_BASE_URI = "/api/users"
-    static final String USER_URI = "/auth"
+    static final String USER_URI = "/%s/credentials"
     static final String HOST = "http://localhost:8905"
 
     RestTemplate restTemplate
@@ -37,7 +37,7 @@ class UserServiceGatewayImplSpec extends Specification {
 
         then:
             1 * userServiceConfigProperties.host >> HOST
-            1 * restTemplate.getForEntity(HOST + USERS_BASE_URI + USER_URI + "?username=" + username, UserCredentialsDto) >> userEntity
+            1 * restTemplate.getForEntity(HOST + USERS_BASE_URI + String.format(USER_URI, username), UserCredentialsDto) >> userEntity
             0 * _
 
         and:
@@ -57,7 +57,7 @@ class UserServiceGatewayImplSpec extends Specification {
 
         then:
             1 * userServiceConfigProperties.host >> HOST
-            1 * restTemplate.getForEntity(HOST + USERS_BASE_URI + USER_URI + "?username=" + username, UserCredentialsDto) >> { throw new ResponseStatusException() }
+            1 * restTemplate.getForEntity(HOST + USERS_BASE_URI + String.format(USER_URI, username), UserCredentialsDto) >> { throw new ResponseStatusException() }
             0 * _
 
         and:

@@ -2,12 +2,7 @@
   "priority": "2",
   "request": {
     "method": "GET",
-    "urlPath": "/api/users/auth",
-    "queryParameters": {
-      "username": {
-        "equalTo": "username"
-      }
-    }
+    "urlPath": "/api/users/username/credentials"
   },
   "response": {
     "status": 200,
