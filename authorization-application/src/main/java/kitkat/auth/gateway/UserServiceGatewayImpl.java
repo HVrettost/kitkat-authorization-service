@@ -4,9 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import kitkat.auth.exception.CoreException;
+import kitkat.auth.exception.mapper.UserExceptionMapper;
 import kitkat.auth.config.properties.UserServiceConfigProperties;
 import kitkat.auth.model.dto.UserCredentialsDto;
 
@@ -20,11 +23,14 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
 
     private final UserServiceConfigProperties userServiceConfigProperties;
     private final RestTemplate restTemplate;
+    private final UserExceptionMapper userExceptionMapper;
 
     public UserServiceGatewayImpl(UserServiceConfigProperties userServiceConfigProperties,
-                                  RestTemplate restTemplate) {
+                                  RestTemplate restTemplate,
+                                  UserExceptionMapper userExceptionMapper) {
         this.userServiceConfigProperties = userServiceConfigProperties;
         this.restTemplate = restTemplate;
+        this.userExceptionMapper = userExceptionMapper;
     }
 
     @Override
@@ -32,9 +38,12 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         try {
             return restTemplate.getForEntity(constructUri(USERS_BASE_URI + String.format(USER_CREDENTIALS_URI, username)),
                     UserCredentialsDto.class).getBody();
+        } catch (HttpClientErrorException ex) {
+            LOGGER.error("Error when calling user service to fetch user information for username: " + username, ex);
+            throw userExceptionMapper.mapToAuthenticationException(ex);
         } catch (Exception ex) {
             LOGGER.error("Error when calling user service to fetch user information for username: " + username, ex);
-            return new UserCredentialsDto();
+            throw new CoreException(ex.getMessage());
         }
     }
 

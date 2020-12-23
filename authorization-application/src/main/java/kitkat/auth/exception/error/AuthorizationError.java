@@ -6,11 +6,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum AuthError {
+public enum AuthorizationError {
 
     REFRESH_TOKEN_NOT_FOUND(1000, "Refresh Token Not Found", "Could not find refresh token in database given the username and userAgent", HttpStatus.UNAUTHORIZED),
     REFRESH_TOKENS_NOT_FOUND(1001, "One Or More Refresh Tokens Not Found", "Could not find one or more refresh tokens in database given the username", HttpStatus.FORBIDDEN),
-    BAD_CREDENTIALS(1002, "Username and password could not be verified", "", HttpStatus.UNAUTHORIZED),
     TOKEN_EXPIRED(1003, "Token has expired", "", HttpStatus.FORBIDDEN),
     INVALID_TOKEN(1004, "Invalid Token", "Token could not be verified by JWT verifier", HttpStatus.FORBIDDEN),
     PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND(1005, "Permissions not found for given role", "Permissions for given role could not be retrieved from database", HttpStatus.FORBIDDEN),

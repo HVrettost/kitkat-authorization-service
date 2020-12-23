@@ -25,7 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kitkat.auth.enumeration.ErrorDetails;
-import kitkat.auth.exception.error.AuthError;
+import kitkat.auth.exception.error.AuthorizationError;
 import kitkat.auth.exception.AuthorizationException;
 import kitkat.auth.jwt.util.JwtClaimUtils;
 import kitkat.auth.jwt.validator.JwtValidator;
@@ -85,13 +85,13 @@ public class AuthorizationFilter implements Filter {
             return;
         } catch (JWTVerificationException jwtVerificationException) {
             LOGGER.error("Error verifying JWT token", jwtVerificationException);
-            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.INVALID_TOKEN.getHttpStatus(),
-                    new ErrorDetails(AuthError.INVALID_TOKEN.getErrorCode(), AuthError.INVALID_TOKEN.getMessage()));
+            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthorizationError.INVALID_TOKEN.getHttpStatus(),
+                    new ErrorDetails(AuthorizationError.INVALID_TOKEN.getErrorCode(), AuthorizationError.INVALID_TOKEN.getMessage()));
             return;
         } catch (Exception exception) {
             LOGGER.error("Generic Error", exception);
-            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthError.GENERIC_ERROR.getHttpStatus(),
-                    new ErrorDetails(AuthError.GENERIC_ERROR.getErrorCode(), AuthError.GENERIC_ERROR.getMessage()));
+            setErrorDetailsAndStatusInServletResponse(httpResponse, AuthorizationError.GENERIC_ERROR.getHttpStatus(),
+                    new ErrorDetails(AuthorizationError.GENERIC_ERROR.getErrorCode(), AuthorizationError.GENERIC_ERROR.getMessage()));
             return;
         }
 
@@ -112,7 +112,7 @@ public class AuthorizationFilter implements Filter {
 
     private List<GrantedAuthority> getUserGrantedAuthorities(String authorities) {
         if (StringUtils.isEmpty(authorities)) {
-            throw new AuthorizationException(AuthError.GRANTED_AUTHORITIES_NOT_FOUND);
+            throw new AuthorizationException(AuthorizationError.GRANTED_AUTHORITIES_NOT_FOUND);
         }
 
         return List.of(authorities.split(" "))

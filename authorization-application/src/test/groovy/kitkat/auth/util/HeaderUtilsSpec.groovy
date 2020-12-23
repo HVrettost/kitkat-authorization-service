@@ -1,7 +1,7 @@
 package kitkat.auth.util
 
 import kitkat.auth.exception.AuthorizationException
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthorizationError
 import kitkat.auth.trait.CookieHelper
 import kitkat.auth.validator.TokenCookieValidator
 import org.springframework.http.HttpHeaders
@@ -45,8 +45,8 @@ class HeaderUtilsSpec extends Specification implements CookieHelper{
         then:
             AuthorizationException authorizationException = thrown()
             with(authorizationException.errorDetails) {
-                message == AuthError.USER_AGENT_NOT_FOUND.message
-                errorCode == AuthError.USER_AGENT_NOT_FOUND.errorCode
+                message == AuthorizationError.USER_AGENT_NOT_FOUND.message
+                errorCode == AuthorizationError.USER_AGENT_NOT_FOUND.errorCode
             }
 
         where:

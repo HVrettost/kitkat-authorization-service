@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import kitkat.auth.enumeration.TokenType;
 import kitkat.auth.exception.AuthorizationException;
-import kitkat.auth.exception.error.AuthError;
+import kitkat.auth.exception.error.AuthorizationError;
 
 @Component
 public class HeaderUtils {
@@ -24,7 +24,7 @@ public class HeaderUtils {
     public String extractUserAgent(HttpServletRequest request) {
         String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (userAgent == null || "".equals(userAgent)) {
-            throw new AuthorizationException(AuthError.USER_AGENT_NOT_FOUND);
+            throw new AuthorizationException(AuthorizationError.USER_AGENT_NOT_FOUND);
         }
 
         return userAgent;

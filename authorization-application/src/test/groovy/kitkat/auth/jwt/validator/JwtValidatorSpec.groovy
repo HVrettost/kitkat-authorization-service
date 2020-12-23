@@ -5,7 +5,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.auth0.jwt.interfaces.DecodedJWT
 import kitkat.auth.exception.AuthorizationException
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthorizationError
 import kitkat.auth.jwt.factory.JwtVerifierFactory
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -50,8 +50,8 @@ class JwtValidatorSpec extends Specification {
         and:
             AuthorizationException authEx = thrown()
             with(authEx) {
-                errorDetails.message == AuthError.TOKEN_EXPIRED.message
-                errorDetails.errorCode == AuthError.TOKEN_EXPIRED.errorCode
+                errorDetails.message == AuthorizationError.TOKEN_EXPIRED.message
+                errorDetails.errorCode == AuthorizationError.TOKEN_EXPIRED.errorCode
             }
     }
 
@@ -72,8 +72,8 @@ class JwtValidatorSpec extends Specification {
         and:
             AuthorizationException authEx = thrown()
             with(authEx) {
-                errorDetails.message == AuthError.INVALID_TOKEN.message
-                errorDetails.errorCode == AuthError.INVALID_TOKEN.errorCode
+                errorDetails.message == AuthorizationError.INVALID_TOKEN.message
+                errorDetails.errorCode == AuthorizationError.INVALID_TOKEN.errorCode
             }
 
         where:

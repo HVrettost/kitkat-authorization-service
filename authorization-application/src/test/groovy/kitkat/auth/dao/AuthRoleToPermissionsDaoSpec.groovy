@@ -1,6 +1,6 @@
 package kitkat.auth.dao
 
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthorizationError
 import spock.lang.Specification
 
 import kitkat.auth.exception.AuthorizationException
@@ -53,9 +53,9 @@ class AuthRoleToPermissionsDaoSpec extends Specification {
         and:
             AuthorizationException authEx = thrown(AuthorizationException)
             with(authEx) {
-                errorDetails.message == AuthError.PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND.message
-                errorDetails.errorCode == AuthError.PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND.errorCode
-                description == AuthError.PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND.description
+                errorDetails.message == AuthorizationError.PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND.message
+                errorDetails.errorCode == AuthorizationError.PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND.errorCode
+                description == AuthorizationError.PERMISSIONS_FOR_GIVEN_AUTH_ROLE_NOT_FOUND.description
             }
     }
 }

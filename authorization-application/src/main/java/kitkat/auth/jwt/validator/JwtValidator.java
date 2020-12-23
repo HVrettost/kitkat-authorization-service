@@ -8,7 +8,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import kitkat.auth.exception.AuthorizationException;
-import kitkat.auth.exception.error.AuthError;
+import kitkat.auth.exception.error.AuthorizationError;
 import kitkat.auth.jwt.factory.JwtVerifierFactory;
 import kitkat.auth.validator.Validator;
 
@@ -27,9 +27,9 @@ public class JwtValidator implements Validator<String> {
             DecodedJWT decodedJWT = JWT.decode(token);
             jwtVerifierFactory.getJwtVerifier(decodedJWT);
         } catch (TokenExpiredException tokenExpiredException) {
-            throw new AuthorizationException(AuthError.TOKEN_EXPIRED);
+            throw new AuthorizationException(AuthorizationError.TOKEN_EXPIRED);
         } catch (JWTVerificationException jwtVerificationException) {
-            throw new AuthorizationException(AuthError.INVALID_TOKEN);
+            throw new AuthorizationException(AuthorizationError.INVALID_TOKEN);
         }
     }
 }

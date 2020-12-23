@@ -1,7 +1,7 @@
 package kitkat.auth.dao
 
 import kitkat.auth.exception.AuthorizationException
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthorizationError
 import kitkat.auth.mapper.AuthRoleToUsernameMapper
 import kitkat.auth.model.dto.AuthRoleToUsernameDto
 import kitkat.auth.model.entity.AuthRoleToUsername
@@ -53,9 +53,9 @@ class AuthRoleToUsernameDaoSpec extends Specification {
         and:
             AuthorizationException authEx = thrown(AuthorizationException)
             with(authEx) {
-                errorDetails.message == AuthError.AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND.message
-                errorDetails.errorCode == AuthError.AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND.errorCode
-                description == AuthError.AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND.description
+                errorDetails.message == AuthorizationError.AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND.message
+                errorDetails.errorCode == AuthorizationError.AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND.errorCode
+                description == AuthorizationError.AUTH_ROLE_FOR_GIVEN_USERNAME_NOT_FOUND.description
             }
     }
 }

@@ -5,7 +5,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import com.fasterxml.jackson.databind.ObjectMapper
 import kitkat.auth.enumeration.ErrorDetails
 import kitkat.auth.exception.AuthorizationException
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthorizationError
 import kitkat.auth.jwt.util.JwtClaimUtils
 import kitkat.auth.jwt.validator.JwtValidator
 import kitkat.auth.util.HeaderUtils
@@ -182,7 +182,7 @@ class AuthorizationFilterSpec extends Specification {
 
         and: 'should extract access token'
             1 * headerUtils.extractAccessToken(servletRequest) >>
-                    { throw new AuthorizationException(AuthError.INVALID_TOKEN) }
+                    { throw new AuthorizationException(AuthorizationError.INVALID_TOKEN) }
 
         and: 'handle authorization exception'
             1 * servletResponse.setStatus(HttpStatus.FORBIDDEN.value())

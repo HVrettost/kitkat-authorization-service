@@ -1,7 +1,7 @@
 package kitkat.auth.validator
 
 import kitkat.auth.exception.AuthorizationException
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthorizationError
 import spock.lang.Specification
 
 import kitkat.auth.trait.CookieHelper
@@ -23,8 +23,8 @@ class TokenCookieValidatorSpec extends Specification implements CookieHelper{
         then:
             AuthorizationException authorizationException = thrown()
             with(authorizationException) {
-                errorDetails.errorCode == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.errorCode
-                errorDetails.message == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.message
+                errorDetails.errorCode == AuthorizationError.TOKEN_COULD_NOT_BE_EXTRACTED.errorCode
+                errorDetails.message == AuthorizationError.TOKEN_COULD_NOT_BE_EXTRACTED.message
             }
 
         where:
@@ -41,8 +41,8 @@ class TokenCookieValidatorSpec extends Specification implements CookieHelper{
         then:
             AuthorizationException authorizationException = thrown()
             with(authorizationException) {
-                errorDetails.errorCode == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.errorCode
-                errorDetails.message == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.message
+                errorDetails.errorCode == AuthorizationError.TOKEN_COULD_NOT_BE_EXTRACTED.errorCode
+                errorDetails.message == AuthorizationError.TOKEN_COULD_NOT_BE_EXTRACTED.message
             }
     }
 
@@ -56,8 +56,8 @@ class TokenCookieValidatorSpec extends Specification implements CookieHelper{
         then:
             AuthorizationException authorizationException = thrown()
             with(authorizationException) {
-                errorDetails.errorCode == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.errorCode
-                errorDetails.message == AuthError.TOKEN_COULD_NOT_BE_EXTRACTED.message
+                errorDetails.errorCode == AuthorizationError.TOKEN_COULD_NOT_BE_EXTRACTED.errorCode
+                errorDetails.message == AuthorizationError.TOKEN_COULD_NOT_BE_EXTRACTED.message
             }
     }
 

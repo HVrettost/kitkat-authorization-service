@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import kitkat.auth.dao.RefreshTokenWhitelistDao;
 import kitkat.auth.exception.AuthorizationException;
-import kitkat.auth.exception.error.AuthError;
+import kitkat.auth.exception.error.AuthorizationError;
 import kitkat.auth.jwt.helper.JwtGenerator;
 import kitkat.auth.jwt.util.JwtClaimUtils;
 import kitkat.auth.util.CookieUtils;
@@ -98,7 +98,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         if (refreshTokenWhitelistDao.isRefreshTokenExistsByUsernameAndUserAgent(username, userAgent)) {
             refreshTokenWhitelistDao.invalidateRefreshToken(username, userAgent);
         } else {
-            throw new AuthorizationException(AuthError.REFRESH_TOKEN_NOT_FOUND);
+            throw new AuthorizationException(AuthorizationError.REFRESH_TOKEN_NOT_FOUND);
         }
     }
 
@@ -111,7 +111,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
         if (refreshTokenWhitelistDao.isRefreshTokenExistsByUsername(username)) {
             refreshTokenWhitelistDao.invalidateRefreshTokensByUsername(username);
         } else {
-            throw new AuthorizationException(AuthError.REFRESH_TOKENS_NOT_FOUND);
+            throw new AuthorizationException(AuthorizationError.REFRESH_TOKENS_NOT_FOUND);
         }
     }
 }

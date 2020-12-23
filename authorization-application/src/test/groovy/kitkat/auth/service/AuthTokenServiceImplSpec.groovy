@@ -1,7 +1,7 @@
 package kitkat.auth.service
 
 import kitkat.auth.exception.AuthorizationException
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthorizationError
 
 import javax.servlet.http.HttpServletRequest
 
@@ -239,9 +239,9 @@ class AuthTokenServiceImplSpec extends Specification {
         and: 'AuthorizationException is thrown'
             AuthorizationException authEx = thrown()
             with(authEx) {
-                errorDetails.message == AuthError.REFRESH_TOKEN_NOT_FOUND.message
-                errorDetails.errorCode == AuthError.REFRESH_TOKEN_NOT_FOUND.errorCode
-                description == AuthError.REFRESH_TOKEN_NOT_FOUND.description
+                errorDetails.message == AuthorizationError.REFRESH_TOKEN_NOT_FOUND.message
+                errorDetails.errorCode == AuthorizationError.REFRESH_TOKEN_NOT_FOUND.errorCode
+                description == AuthorizationError.REFRESH_TOKEN_NOT_FOUND.description
             }
     }
 
@@ -265,9 +265,9 @@ class AuthTokenServiceImplSpec extends Specification {
         and: 'AuthorizationException is thrown'
             AuthorizationException authEx = thrown()
             with(authEx) {
-                errorDetails.message == AuthError.REFRESH_TOKENS_NOT_FOUND.message
-                errorDetails.errorCode == AuthError.REFRESH_TOKENS_NOT_FOUND.errorCode
-                description == AuthError.REFRESH_TOKENS_NOT_FOUND.description
+                errorDetails.message == AuthorizationError.REFRESH_TOKENS_NOT_FOUND.message
+                errorDetails.errorCode == AuthorizationError.REFRESH_TOKENS_NOT_FOUND.errorCode
+                description == AuthorizationError.REFRESH_TOKENS_NOT_FOUND.description
             }
     }
 }

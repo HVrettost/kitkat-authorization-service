@@ -1,8 +1,11 @@
 package kitkat.auth.exception.handler
 
+import kitkat.auth.exception.AuthenticationException
 import kitkat.auth.exception.AuthorizationException
-import kitkat.auth.exception.error.AuthError
+import kitkat.auth.exception.error.AuthenticationError
+import kitkat.auth.exception.error.AuthorizationError
 import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.InternalAuthenticationServiceException
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -27,7 +30,7 @@ class GlobalExceptionHandlerSpec extends Specification {
             }
 
         where:
-            authError << EnumSet.allOf(AuthError)
+            authError << EnumSet.allOf(AuthorizationError)
     }
 
     def "Should handle BadCredentialsException"() {
@@ -36,9 +39,48 @@ class GlobalExceptionHandlerSpec extends Specification {
 
         then:
             with (response) {
-                body.errorCode == AuthError.BAD_CREDENTIALS.errorCode
-                body.message == AuthError.BAD_CREDENTIALS.message
-                statusCode == AuthError.BAD_CREDENTIALS.httpStatus
+                body.errorCode == AuthenticationError.BAD_CREDENTIALS.errorCode
+                body.message == AuthenticationError.BAD_CREDENTIALS.message
+                statusCode == AuthenticationError.BAD_CREDENTIALS.httpStatus
+            }
+    }
+
+    @Unroll
+    def "Should handle AuthenticationException"() {
+        when:
+            def response = globalExceptionHandler.handleAuthenticationException(new AuthenticationException(AuthenticationError.BAD_CREDENTIALS))
+
+        then:
+            with (response) {
+                body.errorCode == AuthenticationError.BAD_CREDENTIALS.errorCode
+                body.message == AuthenticationError.BAD_CREDENTIALS.message
+                statusCode == AuthenticationError.BAD_CREDENTIALS.httpStatus
+            }
+    }
+
+    def "Should handle InternalAuthenticationServiceException with AuthenticationException throwable"() {
+        when:
+            def response = globalExceptionHandler.handleInternalAuthenticationServiceException(new InternalAuthenticationServiceException('message',
+                            new AuthenticationException(AuthenticationError.BAD_CREDENTIALS)))
+
+        then:
+            with (response) {
+                body.errorCode == AuthenticationError.BAD_CREDENTIALS.errorCode
+                body.message == AuthenticationError.BAD_CREDENTIALS.message
+                statusCode == AuthenticationError.BAD_CREDENTIALS.httpStatus
+            }
+    }
+
+    def "Should handle InternalAuthenticationServiceException with not AuthenticationException throwable"() {
+        when:
+            def response = globalExceptionHandler
+                    .handleInternalAuthenticationServiceException(new InternalAuthenticationServiceException('message', new Throwable('throwable message')))
+
+        then:
+            with (response) {
+                body.errorCode == AuthenticationError.BAD_CREDENTIALS.errorCode
+                body.message == AuthenticationError.BAD_CREDENTIALS.message
+                statusCode == AuthenticationError.BAD_CREDENTIALS.httpStatus
             }
     }
 
@@ -48,9 +90,9 @@ class GlobalExceptionHandlerSpec extends Specification {
 
         then:
             with (response) {
-                body.errorCode == AuthError.GENERIC_ERROR.errorCode
-                body.message == AuthError.GENERIC_ERROR.message
-                statusCode == AuthError.GENERIC_ERROR.httpStatus
+                body.errorCode == AuthorizationError.GENERIC_ERROR.errorCode
+                body.message == AuthorizationError.GENERIC_ERROR.message
+                statusCode == AuthorizationError.GENERIC_ERROR.httpStatus
             }
     }
 }
