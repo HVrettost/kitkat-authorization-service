@@ -1,0 +1,4 @@
+{
+  "errorCode": 2000,
+  "message": "User not found with given username"
+}

@@ -1,0 +1,14 @@
+{
+  "priority": "2",
+  "request": {
+    "method": "GET",
+    "urlPath": "/api/users/invalid-username/credentials"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "user-service/invalid-username-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
