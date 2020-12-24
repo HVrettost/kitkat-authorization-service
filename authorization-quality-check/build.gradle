@@ -39,7 +39,9 @@ codenarc {
     codenarcMain {
         source {
             files rootProject.files('authorization-application/src/test/groovy')
-            //add functional tests files
+            files rootProject.files('authorization-application/src/main/groovy')
+            files rootProject.files('authorization-functional-tests/src/test/groovy')
+            files rootProject.files('authorization-functional-tests/src/main/groovy')
         }
     }
 }

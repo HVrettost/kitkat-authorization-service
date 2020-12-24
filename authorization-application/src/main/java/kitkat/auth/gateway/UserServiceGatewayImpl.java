@@ -33,18 +33,13 @@ public class UserServiceGatewayImpl implements UserServiceGateway {
         this.userExceptionMapper = userExceptionMapper;
     }
 
+    //No need to handle exception here as it will be caught by spring security and a InternalAuthenticationServiceException will be thrown
+    //The InternalAuthenticationServiceException will be handled in GlobalExceptionHandler.java
+    //Logging of exception will also happen in GlobalExceptionHandler.java
     @Override
     public UserCredentialsDto getUserCredentialsByUsername(String username) {
-        try {
-            return restTemplate.getForEntity(constructUri(USERS_BASE_URI + String.format(USER_CREDENTIALS_URI, username)),
+        return restTemplate.getForEntity(constructUri(USERS_BASE_URI + String.format(USER_CREDENTIALS_URI, username)),
                     UserCredentialsDto.class).getBody();
-        } catch (HttpClientErrorException ex) {
-            LOGGER.error("Error when calling user service to fetch user information for username: " + username, ex);
-            throw userExceptionMapper.mapToAuthenticationException(ex);
-        } catch (Exception ex) {
-            LOGGER.error("Error when calling user service to fetch user information for username: " + username, ex);
-            throw new CoreException(ex.getMessage());
-        }
     }
 
     private String constructUri(String resourcePath) {

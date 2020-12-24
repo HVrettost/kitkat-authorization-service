@@ -5,7 +5,7 @@
     "urlPath": "/api/users/invalid-username/credentials"
   },
   "response": {
-    "status": 200,
+    "status": 409,
     "bodyFileName": "user-service/invalid-username-response.json",
     "headers": {
       "Content-Type": "application/json"

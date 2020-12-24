@@ -1,0 +1,26 @@
+plugins {
+    id 'groovy'
+    id 'java'
+    id 'org.springframework.boot' version '2.3.4.RELEASE'
+}
+
+group 'kitkat.auth'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.auth0:java-jwt:3.11.0'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

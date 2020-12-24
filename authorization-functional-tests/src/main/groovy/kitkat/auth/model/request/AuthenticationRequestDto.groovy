@@ -1,6 +1,6 @@
-package kitkat.auth.request
+package kitkat.auth.model.request
 
-class AuthenticationRequest {
+class AuthenticationRequestDto {
 
     private String username
     private String password

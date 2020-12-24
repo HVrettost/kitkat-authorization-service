@@ -6,7 +6,7 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "user-service/user-creds-by-username-response.json",
+    "bodyFileName": "user-service/valid-username-response.json",
     "headers": {
       "Content-Type": "application/json"
     }

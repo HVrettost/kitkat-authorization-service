@@ -37,6 +37,9 @@ allprojects {
 
     test {
         useJUnitPlatform()
+        exclude {
+            rootProject.files('authorization-functional-tests')
+        }
     }
 }
 

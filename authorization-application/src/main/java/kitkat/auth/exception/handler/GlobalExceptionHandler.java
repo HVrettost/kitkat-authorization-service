@@ -34,15 +34,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ InternalAuthenticationServiceException.class })
     public ResponseEntity<ErrorDetails> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException exception) {
-        if (exception.getCause() instanceof AuthenticationException) {
-            AuthenticationException authenticationException = ((AuthenticationException) exception.getCause());
-            LOGGER.error(authenticationException.getDescription(), authenticationException);
-            return new ResponseEntity<>(authenticationException.getErrorDetails(), authenticationException.getHttpStatus());
-        } else {
-            LOGGER.error(exception.getCause().getMessage(), exception);
-            AuthenticationError error = AuthenticationError.BAD_CREDENTIALS;
-            return new ResponseEntity<>(new ErrorDetails(error.getErrorCode(), error.getMessage()), error.getHttpStatus());
-        }
+        LOGGER.error(exception.getCause().getMessage(), exception);
+        AuthenticationError error = AuthenticationError.BAD_CREDENTIALS;
+        return new ResponseEntity<>(new ErrorDetails(error.getErrorCode(), error.getMessage()), error.getHttpStatus());
     }
 
 
