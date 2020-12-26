@@ -18,11 +18,4 @@ public class AuthenticationException extends CoreException {
         this.httpStatus = authenticationError.getHttpStatus();
         this.errorDetails = new ErrorDetails(authenticationError.getErrorCode(), authenticationError.getMessage());
     }
-
-    public AuthenticationException(ErrorDetails errorDetails, HttpStatus httpStatus) {
-        super(errorDetails.getMessage());
-        this.errorDetails = errorDetails;
-        this.httpStatus = httpStatus;
-        this.description = errorDetails.getMessage();
-    }
 }
